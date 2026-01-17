@@ -2,35 +2,8 @@
 
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-const baseUrl =
-  process.env.NEXT_PUBLIC_API_URL;
 
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string;
-      email: string;
-      role: string;
-    };
-    accessToken: string;
-  }
-
-  interface User {
-    id: string;
-    email: string;
-    role: string;
-    token: string;
-  }
-}
-
-declare module "next-auth/jwt" {
-  interface JWT {
-    id: string;
-    email: string;
-    role: string;
-    accessToken: string;
-  }
-}
+const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const handler = NextAuth({
   providers: [
@@ -71,7 +44,9 @@ const handler = NextAuth({
             id: user?.id || user?._id || "unknown",
             email: user?.email || credentials.email,
             role: user?.role || "",
-            token, // accessToken from backend
+            accessToken: token, // Mapped to accessToken
+            refreshToken: "", // Default or actual refresh token if available
+            name: `${user?.firstName || ""} ${user?.lastName || ""}`.trim(), // Construct name
           };
         } catch (error) {
           console.error("Authorize error:", error);
@@ -91,18 +66,27 @@ const handler = NextAuth({
         token.id = user.id;
         token.email = user.email;
         token.role = user?.role as string;
-        token.accessToken = user?.token as string;
+        token.accessToken = user?.accessToken as string; 
       }
       return token;
     },
 
     async session({ session, token }) {
       if (token) {
+        // Construct session.user to match Session interface if needed, or leave as is if it's correct
+        // Currently inline types were removed, so it uses global types.
+        // Global Session type has user: User. 
+        // We need to ensure we populate it correctly or that next-auth does it.
+        // Usually we need to manually map.
         session.user = {
-          id: token.id as string,
-          email: token.email as string,
-          role: token.role as string,
-        };
+            id: token.id,
+            email: token.email,
+            role: token.role,
+            name: token.name,
+            accessToken: token.accessToken,
+            refreshToken: token.refreshToken
+        } as any; // Type assertion to avoid strict checks usually needed here if types are tricky
+        
         session.accessToken = token.accessToken as string;
       }
       return session;

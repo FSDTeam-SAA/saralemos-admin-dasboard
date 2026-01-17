@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Grid, UploadCloud, Users, Gift, Settings, LogOut } from "lucide-react";
+import Image from "next/image";
 
 const menuItems = [
   { label: "Dashboard Overview", href: "/", icon: Grid },
@@ -17,14 +18,14 @@ export function Sidebar() {
 
   return (
     <div className="w-64 border-r border-border bg-background">
-      <div className="p-6 flex items-center gap-2">
-        <div className="w-8 h-8 rounded bg-green-600 flex items-center justify-center text-white font-bold">
-          L
-        </div>
-        <span className="font-bold text-green-600">LIME PITCH</span>
+      <div className="p-6 flex items-center justify-center gap-2">
+        <Link href={'/'}>
+        
+        <Image src={'/images/logo.svg'} alt="logo" width={130} height={130} className=" object-cover" />
+        </Link>
       </div>
 
-      <nav className="px-4 py-8 space-y-2">
+      <nav className="px-4 py-8 space-y-5">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;

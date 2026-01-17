@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import TanstackProvider from "@/provider/Tanstack-Provider";
 import { Toaster } from "sonner";
+import AuthProvider from "@/provider/AuthProvider";
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
@@ -41,10 +42,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans antialiased`}>
         <TanstackProvider>
-          {children}
-          <Analytics />
+          <AuthProvider>
+            {children}
+            <Analytics />
 
-          <Toaster position="top-right" richColors />
+            <Toaster position="top-right" richColors />
+          </AuthProvider>
         </TanstackProvider>
         {/* {children} */}
       </body>
