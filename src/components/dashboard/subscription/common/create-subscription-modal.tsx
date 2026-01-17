@@ -61,16 +61,11 @@ export function CreateSubscriptionModal({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="text-sm font-medium text-foreground">Subscription Name</label>
-            <select
+            <Input  type="text"
               {...register("name")}
               className="w-full mt-2 px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-green-600"
-            >
-              <option value="">Select a tier</option>
-              <option value="Free">Free</option>
-              <option value="Starter">Starter</option>
-              <option value="Professional">Professional</option>
-              <option value="Enterprise">Enterprise</option>
-            </select>
+            />
+       
             {errors.name && <p className="text-sm text-destructive mt-1">{errors.name.message}</p>}
           </div>
 
@@ -92,9 +87,9 @@ export function CreateSubscriptionModal({
               {errors.price && <p className="text-sm text-destructive mt-1">{errors.price.message}</p>}
             </div>
             <div>
-              <label className="text-sm font-medium text-foreground">Billing Period</label>
+              <label className="text-sm font-medium text-foreground">Duration</label>
               <select
-                {...register("billingPeriod")}
+                {...register("duration")}
                 className="w-full mt-2 px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-green-600"
               >
                 <option value="month">Monthly</option>

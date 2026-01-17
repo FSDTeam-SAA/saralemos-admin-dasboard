@@ -2,21 +2,16 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { subscriptionsApi } from "@/lib/api/api"
-import type { SubscriptionPlan, PromoCode } from "./subscriptions.types"
+import type { SubscriptionPlan } from "./subscriptions.types"
+import { Subscription, SubscriptionDelete, SubscriptionFetch } from "@/lib/api/subscription"
 
-export const useSubscriptionPlans = (page = 1, pageSize = 10) => {
+export const useSubscriptionPlans = () => {
   return useQuery({
-    queryKey: ["subscriptions", page, pageSize],
-    queryFn: () => subscriptionsApi.getPlans(page, pageSize),
+    queryKey: ["subscriptions"],
+    queryFn: () => SubscriptionFetch(),
   })
 }
 
-export const usePromoCodes = (page = 1, pageSize = 10) => {
-  return useQuery({
-    queryKey: ["promo-codes", page, pageSize],
-    queryFn: () => subscriptionsApi.getPromoCodes(page, pageSize),
-  })
-}
 
 export const useRevenueMetrics = () => {
   return useQuery({
@@ -28,7 +23,7 @@ export const useRevenueMetrics = () => {
 export const useCreatePlan = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: Omit<SubscriptionPlan, "id" | "createdAt" | "updatedAt">) => subscriptionsApi.createPlan(data),
+    mutationFn: (data: Partial<SubscriptionPlan> ) => Subscription(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["subscriptions"] })
       queryClient.invalidateQueries({ queryKey: ["revenue-metrics"] })
@@ -39,30 +34,11 @@ export const useCreatePlan = () => {
 export const useDeletePlan = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (id: string) => subscriptionsApi.deletePlan(id),
+    mutationFn: (id: string) => SubscriptionDelete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["subscriptions"] })
     },
   })
 }
 
-export const useCreatePromoCode = () => {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: (data: Omit<PromoCode, "id" | "createdAt" | "updatedAt" | "currentUses">) =>
-      subscriptionsApi.createPromoCode(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["promo-codes"] })
-    },
-  })
-}
 
-export const useDeletePromoCode = () => {
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: (id: string) => subscriptionsApi.deletePromoCode(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["promo-codes"] })
-    },
-  })
-}

@@ -2,28 +2,65 @@
 import type { ApiResponse, PaginatedResponse } from "@/types/api"
 import type { User, HeroSection, DashboardStats, SubscriptionPlan, PromoCode, RevenueMetrics } from "@/types/user"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "/api"
+import axios from "axios";
+
+import { getSession } from "next-auth/react";
+
+
+
+// import { Cagliostro } from "next/font/google";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
+
+const api = axios.create({
+  baseURL: API_URL,
+});
+
+api.interceptors.request.use(
+  async (config) => {
+    const session = await getSession();
+    if (session?.accessToken) {
+      config.headers.Authorization = `Bearer ${session?.accessToken}`;
+    } else {
+      console.warn("No token in session");
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+export default api;
 
 async function apiCall<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> {
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const { body, method, headers, ...rest } = options || {}
+
+    const config: any = {
+      url: endpoint,
+      method: method || "GET",
       headers: {
         "Content-Type": "application/json",
-        ...options?.headers,
+        ...headers,
       },
-      ...options,
-    })
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`)
+      ...rest,
     }
 
-    const data = await response.json()
-    return { data, error: null, success: true }
-  } catch (error) {
+    if (body && typeof body === "string") {
+      try {
+        config.data = JSON.parse(body)
+      } catch (e) {
+        config.data = body
+      }
+    }
+
+    const response = await api(config)
+
+    return { data: response.data, error: null, success: true }
+  } catch (error: any) {
+    console.error("API Call Error:", error)
     return {
       data: null as any,
-      error: error instanceof Error ? error.message : "Unknown error",
+      error: error.response?.data?.message || error.message || "Unknown error",
       success: false,
     }
   }
@@ -36,13 +73,13 @@ export const userApi = {
   getUserById: (id: string) => apiCall<User>(`/users/${id}`),
 
   createUser: (data: Omit<User, "id">) =>
-    apiCall<User>("/users", {
+    api.post("/users", {
       method: "POST",
       body: JSON.stringify(data),
     }),
 
   updateUser: (id: string, data: Partial<User>) =>
-    apiCall<User>(`/users/${id}`, {
+    api.put(`/users/${id}`, {
       method: "PUT",
       body: JSON.stringify(data),
     }),
@@ -80,38 +117,22 @@ export const heroApi = {
 
 // Dashboard API
 export const dashboardApi = {
-  getStats: () => apiCall<DashboardStats>("/dashboard/stats"),
+  getStats: () => api.get("/dashboard/stats"),
 }
 
 // Subscriptions API
+// Subscriptions API
 export const subscriptionsApi = {
-  getPlans: (page = 1, pageSize = 10) =>
-    apiCall<PaginatedResponse<SubscriptionPlan>>(`/subscriptions/plans?page=${page}&pageSize=${pageSize}`),
+  getPlans: () => api.get<ApiResponse<SubscriptionPlan>>("/subscriptions/plans"),
 
-  createPlan: (data: Omit<SubscriptionPlan, "id" | "createdAt" | "updatedAt">) =>
-    apiCall<SubscriptionPlan>("/subscriptions/plans", {
-      method: "POST",
-      body: JSON.stringify(data),
-    }),
+  createPlan: (data: Partial<SubscriptionPlan>) =>
+    api.post("/subscriptions/plans", data),
 
   deletePlan: (id: string) =>
-    apiCall<void>(`/subscriptions/plans/${id}`, {
-      method: "DELETE",
-    }),
-
-  getPromoCodes: (page = 1, pageSize = 10) =>
-    apiCall<PaginatedResponse<PromoCode>>(`/subscriptions/promo-codes?page=${page}&pageSize=${pageSize}`),
-
-  createPromoCode: (data: Omit<PromoCode, "id" | "createdAt" | "updatedAt" | "currentUses">) =>
-    apiCall<PromoCode>("/subscriptions/promo-codes", {
-      method: "POST",
-      body: JSON.stringify(data),
-    }),
+    api.delete(`/subscriptions/plans/${id}`),
 
   deletePromoCode: (id: string) =>
-    apiCall<void>(`/subscriptions/promo-codes/${id}`, {
-      method: "DELETE",
-    }),
+    api.delete(`/subscriptions/promo-codes/${id}`),
 
-  getRevenueMetrics: () => apiCall<RevenueMetrics>("/subscriptions/metrics"),
+  getRevenueMetrics: () => api.get<RevenueMetrics>("/subscriptions/metrics"),
 }
