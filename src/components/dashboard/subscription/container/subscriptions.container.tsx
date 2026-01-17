@@ -3,11 +3,11 @@
 import { useState } from "react"
 import {
   useSubscriptionPlans,
-  usePromoCodes,
+
   useRevenueMetrics,
   useCreatePlan,
   useDeletePlan,
-  useDeletePromoCode,
+ 
 } from "../common/subscriptions.hooks"
 import { SubscriptionsPresenter } from "./subscriptions.presenter"
 import type { CreateSubscriptionValues } from "../common/subscriptions.schema"
@@ -17,35 +17,30 @@ export function SubscriptionsContainer() {
   const pageSize = 10
 
   const {
-    data: plansResponse,
+    data,
     isLoading: isLoadingPlans,
     error: errorPlans,
-  } = useSubscriptionPlans(currentPage, pageSize)
-  const { data: promoResponse, isLoading: isLoadingPromo } = usePromoCodes(currentPage, pageSize)
+  } = useSubscriptionPlans()
+
   const { data: metricsResponse } = useRevenueMetrics()
 
   const createPlanMutation = useCreatePlan()
   const deletePlanMutation = useDeletePlan()
-  const deletePromoMutation = useDeletePromoCode()
+
 
   const handleCreatePlan = (data: CreateSubscriptionValues) => {
+    console.log("Received data in handleCreatePlan:", data)
     createPlanMutation.mutate({
       name: data.name,
       price: data.price,
-      billingPeriod: data.billingPeriod,
+      billingCycle: data.duration,
       description: data.description,
       features: data.features,
-      activeSubscribers: 0,
-      monthlyRevenue: 0,
-      conversionRate: 0,
-      churnRate: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     })
   }
 
-  const plans = plansResponse?.data?.items || []
-  const promoCodes = promoResponse?.data?.items || []
+  const plans = data?.data || []
+
   const metrics = metricsResponse?.data || {
     mrr: 9108,
     arpu: 99,
@@ -54,22 +49,21 @@ export function SubscriptionsContainer() {
     mrrChange: 12.45,
     conversionRate: 37,
   }
-  const totalPages = plansResponse?.data?.total ? Math.ceil(plansResponse.data.total / pageSize) : 1
+  // const totalPages = plansResponse?.data?.total ? Math.ceil(plansResponse.data.total / pageSize) : 1
 
   return (
     <SubscriptionsPresenter
       plans={plans}
-      promoCodes={promoCodes}
       metrics={metrics}
-      isLoading={isLoadingPlans || isLoadingPromo}
-      error={errorPlans?.error || null}
+      isLoading={isLoadingPlans}
+      error={errorPlans?.message || null}
       onCreatePlan={handleCreatePlan}
       onDeletePlan={(id) => deletePlanMutation.mutate(id)}
-      onDeletePromoCode={(id) => deletePromoMutation.mutate(id)}
+    
       isCreatingPlan={createPlanMutation.isPending}
       onPageChange={setCurrentPage}
       currentPage={currentPage}
-      totalPages={totalPages}
+      // totalPages={totalPages}
     />
   )
 }

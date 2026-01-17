@@ -1,9 +1,9 @@
 import { z } from "zod"
 
 export const createSubscriptionSchema = z.object({
-  name: z.enum(["Free", "Starter", "Professional", "Enterprise"]),
+  name: z.string().min(1,"Name Is Required"),
   price: z.number().min(0, "Price must be 0 or greater"),
-  billingPeriod: z.enum(["month", "year"]),
+  duration: z.enum(["month", "year"]),
   description: z.string().min(1, "Description is required"),
   features: z.array(z.string()).min(1, "At least one feature is required"),
 })

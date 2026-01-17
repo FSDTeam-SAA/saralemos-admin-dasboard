@@ -33,17 +33,12 @@ export interface DashboardStats {
 
 export interface SubscriptionPlan {
   id: string
-  name: SubscriptionTier
+  name: string
   price: number
-  billingPeriod: "month" | "year"
+  duration: "month" | "year"
   description: string
   features: string[]
-  activeSubscribers: number
-  monthlyRevenue: number
-  conversionRate: number
-  churnRate: number
-  createdAt: string
-  updatedAt: string
+
 }
 
 export interface PromoCode {

@@ -31,7 +31,7 @@ export default function Login() {
 
       if (result?.ok) {
         toast.success("Logged in successfully!");
-        router.push("/dashboard/all-info");
+        router.push("/");
       } else {
         toast.error(result?.error || "Login failed. Please try again.");
       }
