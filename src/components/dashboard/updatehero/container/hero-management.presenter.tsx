@@ -39,13 +39,13 @@ export function HeroManagementPresenter({ onSubmit, isLoading }: HeroManagementP
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Title</label>
-              <Input {...register("title")} placeholder="Cardiology" className="border-border" />
-              {errors.title && <p className="text-destructive text-sm mt-1">{errors.title.message}</p>}
+              <Input {...register("section")} placeholder="Cardiology" className="border-border" />
+              {errors.section && <p className="text-destructive text-sm mt-1">{errors.section.message}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Sub Title</label>
-              <Input {...register("subTitle")} placeholder="Dr. Sarah Johnson" className="border-border" />
-              {errors.subTitle && <p className="text-destructive text-sm mt-1">{errors.subTitle.message}</p>}
+              <Input {...register("subtitle")} placeholder="Dr. Sarah Johnson" className="border-border" />
+              {errors.subtitle && <p className="text-destructive text-sm mt-1">{errors.subtitle.message}</p>}
             </div>
           </div>
 
