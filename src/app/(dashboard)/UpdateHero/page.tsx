@@ -9,8 +9,8 @@ export const metadata = {
 export default function HeroPage() {
   return (
     <DashboardLayout
-      title="Subscriptions & Promo Codes"
-      description="Manage plans, pricing, and promotional offers"
+      title="Update Hero Section"
+      description="Monitor platform performance and user activity"
     >
       <HeroManagementContainer />
     </DashboardLayout>

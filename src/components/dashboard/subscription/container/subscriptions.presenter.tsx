@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PromoCode, RevenueMetrics, SubscriptionPlan } from "../common";
+import {  RevenueMetrics, SubscriptionPlan } from "../common";
 import { CreateSubscriptionValues } from "../common/subscriptions.schema";
 
 import { SubscriptionPlanCard } from "../common/subscription-plan-card";
@@ -69,7 +69,7 @@ export function SubscriptionsPresenter({
           </h2>
           <Button
             onClick={() => setShowCreateModal(true)}
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-primary hover:bg-primary/90"
           >
             <Plus className="w-4 h-4 mr-2" />
             Create Subscription

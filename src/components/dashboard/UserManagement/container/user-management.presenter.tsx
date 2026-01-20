@@ -1,10 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import type { User } from "@/types/user"
+import type { User } from "@/lib/types/users"
 import { UserTable } from "./user-management.table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 interface UserManagementPresenterProps {
   users: User[]
@@ -52,16 +53,16 @@ export function UserManagementPresenter({
             <button
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-3 py-1 border border-border rounded text-sm disabled:opacity-50"
+              className="px-3 py-1 border border-border rounded text-sm disabled:opacity-50 hover:bg-muted transition-colors"
             >
-              ←
+              <ChevronLeft className="w-4 h-4" />
             </button>
             {Array.from({ length: totalPages }).map((_, i) => (
               <button
                 key={i + 1}
                 onClick={() => onPageChange(i + 1)}
-                className={`px-3 py-1 rounded text-sm ${
-                  currentPage === i + 1 ? "bg-green-600 text-white" : "border border-border"
+                className={`px-3 py-1 rounded text-sm transition-colors ${
+                  currentPage === i + 1 ? "bg-green-600 text-white" : "border border-border hover:bg-muted"
                 }`}
               >
                 {i + 1}
@@ -70,9 +71,9 @@ export function UserManagementPresenter({
             <button
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="px-3 py-1 border border-border rounded text-sm disabled:opacity-50"
+              className="px-3 py-1 border border-border rounded text-sm disabled:opacity-50 hover:bg-muted transition-colors"
             >
-              →
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -98,25 +99,47 @@ export function UserManagementPresenter({
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Status</label>
-                  <Badge variant={selectedUser.status === "Active" ? "default" : "secondary"}>
-                    {selectedUser.status}
+                  <Badge 
+                    className={`px-4 py-2 rounded-xl ${selectedUser.isActive ? "bg-[#F0FDF4] text-[#16A34A]" : "bg-[#F3F4F6] text-[#68706A]"}`}
+                  >
+                    {selectedUser.isActive ? "Active" : "Inactive"}
                   </Badge>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Plan</label>
-                  <p className="text-foreground font-medium">{selectedUser.plan}</p>
+                  <p className="text-foreground font-medium capitalize">{selectedUser.plan || "Free"}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Listings</label>
+                  <p className="text-foreground font-medium">{selectedUser.listings || 0}</p>
+                </div>
+                <div>
+                    <label className="text-sm font-medium text-muted-foreground">Role</label>
+                    <p className="text-foreground font-medium">{selectedUser.role}</p>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Signup Date</label>
-                  <p className="text-foreground font-medium">{selectedUser.signupDate}</p>
+                  <p className="text-foreground font-medium">
+                    {selectedUser.signupDate ? new Date(selectedUser.signupDate).toLocaleDateString() : (selectedUser.createdAt ? new Date(selectedUser.createdAt).toLocaleDateString() : "N/A")}
+                  </p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Last Active</label>
-                  <p className="text-foreground font-medium">{selectedUser.lastActive}</p>
+                  <p className="text-foreground font-medium">
+                    {selectedUser.lastActive ? new Date(selectedUser.lastActive).toLocaleDateString() : "N/A"}
+                  </p>
                 </div>
               </div>
+              {selectedUser.phoneNumber && (
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Phone Number</label>
+                  <p className="text-foreground font-medium">{selectedUser.phoneNumber}</p>
+                </div>
+              )}
             </div>
           )}
         </DialogContent>

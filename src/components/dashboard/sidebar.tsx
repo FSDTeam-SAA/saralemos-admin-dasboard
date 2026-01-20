@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Grid, UploadCloud, Users, Gift, Settings, LogOut } from "lucide-react";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
 
 const menuItems = [
   { label: "Dashboard Overview", href: "/", icon: Grid },
@@ -35,8 +36,8 @@ export function Sidebar() {
               href={item.href}
               className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${
                 isActive
-                  ? "bg-green-100 text-green-600 font-medium"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-[#F8F9FA] text-[#65A30D] font-medium"
+                  : "text-primary/90 hover:text-foreground"
               }`}
             >
               <Icon className="w-5 h-5" />
@@ -47,7 +48,10 @@ export function Sidebar() {
       </nav>
 
       <div className="absolute bottom-8 left-4">
-        <button className="flex items-center gap-3 px-4 py-2 text-destructive hover:text-destructive/80 transition-colors">
+        <button 
+          onClick={() => signOut({ callbackUrl: "/login" })}
+          className="flex items-center gap-3 px-4 py-2 text-destructive hover:text-destructive/80 transition-colors"
+        >
           <LogOut className="w-5 h-5" />
           <span>Log Out</span>
         </button>

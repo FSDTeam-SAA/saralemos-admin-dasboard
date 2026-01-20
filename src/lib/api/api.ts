@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ApiResponse, PaginatedResponse } from "@/types/api"
-import type { User, HeroSection, DashboardStats, SubscriptionPlan, PromoCode, RevenueMetrics } from "@/types/user"
+import type {   SubscriptionPlan, RevenueMetrics } from "@/types/user"
 
 import axios from "axios";
 
 import { getSession } from "next-auth/react";
+import { User, UsersApiResponse } from "../types/users";
 
 
 
@@ -68,7 +69,7 @@ async function apiCall<T>(endpoint: string, options?: RequestInit): Promise<ApiR
 
 // User Management API
 export const userApi = {
-  getUsers: (page = 1, pageSize = 10) => apiCall<PaginatedResponse<User>>(`/users?page=${page}&pageSize=${pageSize}`),
+  getUsers: (page = 1, pageSize = 10) => apiCall<UsersApiResponse>(`user/all-users`),
 
   getUserById: (id: string) => apiCall<User>(`/users/${id}`),
 
@@ -85,35 +86,35 @@ export const userApi = {
     }),
 
   deleteUser: (id: string) =>
-    apiCall<void>(`/users/${id}`, {
+    apiCall<void>(`/user/${id}`, {
       method: "DELETE",
     }),
 }
 
 // Hero Section API
-export const heroApi = {
-  getHeroSections: (page = 1, pageSize = 10) =>
-    apiCall<PaginatedResponse<HeroSection>>(`/hero-sections?page=${page}&pageSize=${pageSize}`),
+// export const heroApi = {
+//   getHeroSections: (page = 1, pageSize = 10) =>
+//     apiCall<PaginatedResponse<HeroSection>>(`/hero-sections?page=${page}&pageSize=${pageSize}`),
 
-  getHeroById: (id: string) => apiCall<HeroSection>(`/hero-sections/${id}`),
+//   getHeroById: (id: string) => apiCall<HeroSection>(`/hero-sections/${id}`),
 
-  createHero: (data: Omit<HeroSection, "id" | "createdAt" | "updatedAt">) =>
-    apiCall<HeroSection>("/hero-sections", {
-      method: "POST",
-      body: JSON.stringify(data),
-    }),
+//   createHero: (data: Omit<HeroSection, "id" | "createdAt" | "updatedAt">) =>
+//     apiCall<HeroSection>("/hero-sections", {
+//       method: "POST",
+//       body: JSON.stringify(data),
+//     }),
 
-  updateHero: (id: string, data: Partial<HeroSection>) =>
-    apiCall<HeroSection>(`/hero-sections/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(data),
-    }),
+//   updateHero: (id: string, data: Partial<HeroSection>) =>
+//     apiCall<HeroSection>(`/hero-sections/${id}`, {
+//       method: "PUT",
+//       body: JSON.stringify(data),
+//     }),
 
-  deleteHero: (id: string) =>
-    apiCall<void>(`/hero-sections/${id}`, {
-      method: "DELETE",
-    }),
-}
+//   deleteHero: (id: string) =>
+//     apiCall<void>(`/hero-sections/${id}`, {
+//       method: "DELETE",
+//     }),
+// }
 
 // Dashboard API
 export const dashboardApi = {

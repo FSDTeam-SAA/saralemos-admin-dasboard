@@ -15,11 +15,11 @@ const InfoItem = ({ label, value }: { label: string; value?: string | null }) =>
 )
 
 const UserDataShow = ({ onSetEdit, edit }: EditProps) => {
-  const { data } = useGetProfile()
   const { data: session } = useSession()
-
+  const id=session?.user.id || ''
+  const { data } = useGetProfile(id)
   const profile = data?.data || session?.user
- console.log('user profile',profile)
+
   return (
     <div className="flex-1 bg-white rounded-lg border border-gray-200 p-8">
       {/* Header */}
@@ -49,15 +49,15 @@ const UserDataShow = ({ onSetEdit, edit }: EditProps) => {
         {/* Email & Phone */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <InfoItem label="Email Address" value={profile?.email} />
-          <InfoItem label="Phone Number" value={profile?.phone} />
+          <InfoItem label="Phone Number" value={profile?.phoneNumber || profile?.phone} />
         </div>
 
         {/* Address */}
-        <InfoItem label="Street Address" value={profile?.street} />
+        <InfoItem label="Street Address" value={profile?.address?.roadArea || profile?.roadArea || profile?.street} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <InfoItem label="Location" value={profile?.location} />
-          <InfoItem label="Postal Code" value={profile?.postalCode} />
+          <InfoItem label="Location" value={profile?.address?.country || profile?.address?.cityState || profile?.location} />
+          <InfoItem label="Postal Code" value={profile?.address?.postalCode || profile?.postalCode} />
         </div>
 
         {/* Meta */}
