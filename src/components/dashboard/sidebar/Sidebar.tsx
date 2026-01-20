@@ -31,7 +31,7 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${
-                isActive ? "bg-green-100 text-green-600 font-medium" : "text-muted-foreground hover:text-foreground"
+                isActive ? "bg-[#F8F9FA] text-[#65A30D] font-medium" : "text-primary hover:text-foreground"
               }`}
             >
               <Icon className="w-5 h-5" />

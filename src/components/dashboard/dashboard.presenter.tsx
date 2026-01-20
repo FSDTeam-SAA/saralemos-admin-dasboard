@@ -5,12 +5,14 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { Users, TrendingUp, DollarSign, Package } from "lucide-react"
 import { DashboardStats } from "@/types/user"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { DashboardData } from "@/lib/types/overall"
 
 
 interface DashboardPresenterProps {
   stats: DashboardStats | null
   isLoading: boolean
   error: string | null
+  data:DashboardData;
 }
 
 const usageData = [
@@ -37,7 +39,7 @@ const revenueData = [
   { month: "Jun", revenue: 28000 },
 ]
 
-export function DashboardPresenter({ stats, isLoading, error }: DashboardPresenterProps) {
+export function DashboardPresenter({ stats, isLoading, error,data }: DashboardPresenterProps) {
   if (isLoading) {
     return <div className="text-center text-muted-foreground">Loading dashboard...</div>
   }
@@ -54,9 +56,9 @@ export function DashboardPresenter({ stats, isLoading, error }: DashboardPresent
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Total Users</p>
-                <p className="text-2xl font-bold text-green-600">{stats?.totalUsers || 248}</p>
+                <p className="text-2xl font-bold text-primary">{data?.totalUsers || 248}</p>
               </div>
-              <Users className="w-8 h-8 text-green-600" />
+              <Users className="w-8 h-8 text-primary" />
             </div>
           </CardContent>
         </Card>
@@ -66,9 +68,9 @@ export function DashboardPresenter({ stats, isLoading, error }: DashboardPresent
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Active Subscriptions</p>
-                <p className="text-2xl font-bold text-green-600">{stats?.activeSubscriptions || 92}</p>
+                <p className="text-2xl font-bold text-primary">{data?.activeSubscriptions || 92}</p>
               </div>
-              <TrendingUp className="w-8 h-8 text-green-600" />
+              <TrendingUp className="w-8 h-8 text-primary" />
             </div>
           </CardContent>
         </Card>
@@ -78,9 +80,9 @@ export function DashboardPresenter({ stats, isLoading, error }: DashboardPresent
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Monthly Revenue</p>
-                <p className="text-2xl font-bold text-green-600">${stats?.monthlyRevenue || 20300}</p>
+                <p className="text-2xl font-bold text-primary">${data?.monthlyRevenue?.amount || 20300}</p>
               </div>
-              <DollarSign className="w-8 h-8 text-green-600" />
+              <DollarSign className="w-8 h-8 text-primary" />
             </div>
           </CardContent>
         </Card>
@@ -90,9 +92,9 @@ export function DashboardPresenter({ stats, isLoading, error }: DashboardPresent
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Listings Processed</p>
-                <p className="text-2xl font-bold text-green-600">{stats?.listingsProcessed || 85}</p>
+                <p className="text-2xl font-bold text-primary">{stats?.listingsProcessed || 85}</p>
               </div>
-              <Package className="w-8 h-8 text-green-600" />
+              <Package className="w-8 h-8 text-primary" />
             </div>
           </CardContent>
         </Card>

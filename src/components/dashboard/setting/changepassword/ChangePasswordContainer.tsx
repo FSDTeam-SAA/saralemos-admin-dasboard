@@ -15,7 +15,7 @@ const ChangePasswordContainer = () => {
   const form = useForm<ChangePasswordFormData>({
     resolver: zodResolver(changePasswordSchema),
     defaultValues: {
-      currentPassword: "",
+      oldPassword: "",
       newPassword: "",
       confirmPassword: "",
     },
@@ -24,20 +24,12 @@ const ChangePasswordContainer = () => {
   const onSubmit = (data: ChangePasswordFormData) => {
     mutate(
       {
-        currentPassword: data.currentPassword,
+        oldPassword: data.oldPassword,
         newPassword: data.newPassword,
       },
       {
         onSuccess: () => {
-          toast.success("Success", {
-            description: "Your password has been changed successfully.",
-          });
           form.reset();
-        },
-        onError: () => {
-          toast.error("Error", {
-            description: "Failed to change password. Please try again.",
-          });
         },
       }
     );

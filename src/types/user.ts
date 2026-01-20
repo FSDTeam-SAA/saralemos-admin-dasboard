@@ -3,16 +3,7 @@ export type UserPlan = "Starter" | "Professional" | "Enterprise"
 export type SubscriptionTier = "Free" | "Starter" | "Professional" | "Enterprise"
 export type PromoStatus = "Active" | "Expired" | "Inactive"
 
-export interface User {
-  id: string
-  name: string
-  email: string
-  plan: UserPlan
-  listings: number
-  lastActive: string
-  signupDate: string
-  status: UserStatus
-}
+
 
 export interface HeroSection {
   id: string

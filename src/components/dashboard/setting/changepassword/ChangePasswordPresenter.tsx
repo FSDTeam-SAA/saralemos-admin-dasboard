@@ -45,7 +45,7 @@ const ChangePasswordPresenter = ({ form, onSubmit, isLoading = false }: ChangePa
           {/* Current Password */}
           <FormField
             control={form.control}
-            name="currentPassword"
+            name="oldPassword"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-gray-700 font-medium">Current Password</FormLabel>
