@@ -1,4 +1,5 @@
-import type { User } from "@/types/user"
+import { User } from "@/lib/types/users"
+
 
 export interface UserManagementState {
   users: User[]

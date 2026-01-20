@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import api from "./api"
 
-export async function getUserProfile() {
+export async function getUserProfile(id:string) {
    try{
-    const res= await api.get(`/user/my-profile`);
+    const res= await api.get(`/user/${id}`);
     return res.data;
    }catch(error){
     if(error instanceof Error){
@@ -13,7 +14,7 @@ export async function getUserProfile() {
 }
 
 
-export async function userProfileUpdate(data: FormData, id: string) {
+export async function userProfileUpdate(data: any, id: string) {
    try{
     const res= await api.put(`/user/${id}`,data);
     return res.data;
@@ -26,9 +27,9 @@ export async function userProfileUpdate(data: FormData, id: string) {
 }
 
 
-export async function changePassword({currentPassword,newPassword}:{currentPassword:string,newPassword:string}) {
+export async function changePassword({oldPassword,newPassword}:{oldPassword:string,newPassword:string}) {
            try{
-    const res= await api.post(`/auth/change-password`,{currentPassword,newPassword});
+    const res= await api.post(`/auth/change-password`,{oldPassword,newPassword});
     return res.data;
    }catch(error){
     if(error instanceof Error){
@@ -37,9 +38,9 @@ export async function changePassword({currentPassword,newPassword}:{currentPassw
    } 
 }
 
-export async function uploadUserAvatar(data: FormData, id: string) {
+export async function uploadUserAvatar(data: FormData) {
    try {
-    const res = await api.post(`/user/upload-avatar/${id}`, data, {
+    const res = await api.put(`/user/upload-avatar`, data, {
         headers: {
             'Content-Type': 'multipart/form-data',
         }

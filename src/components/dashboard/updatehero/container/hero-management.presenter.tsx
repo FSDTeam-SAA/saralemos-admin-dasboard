@@ -1,90 +1,124 @@
-"use client"
+"use client";
 
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { type HeroFormValues, heroFormSchema } from "./hero-management.schema"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Upload } from "lucide-react"
+import { type HeroFormValues } from "./hero-management.schema";
+import UpdateHeroModal from "../common/UpdateHeroModal";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import { Asset } from "@/lib/types/hero";
+import { HeroTable } from "./hero-management.table";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface HeroManagementPresenterProps {
-  onSubmit: (values: HeroFormValues, imageFile?: File, videoFile?: File) => void
-  isLoading: boolean
+  onSubmit: (
+    values: HeroFormValues,
+    imageFile?: File,
+    videoFile?: File,
+  ) => void;
+  onDelete: (id: string) => void;
+  isLoading: boolean;
+  data: Asset[];
 }
 
-export function HeroManagementPresenter({ onSubmit, isLoading }: HeroManagementPresenterProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<HeroFormValues>({
-    resolver: zodResolver(heroFormSchema),
-  })
+export function HeroManagementPresenter({
+  onSubmit,
+  onDelete,
+  isLoading,
+  data,
+}: HeroManagementPresenterProps) {
+  const [open, setOpen] = useState(false);
+  const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
+  const [viewingAsset, setViewingAsset] = useState<Asset | null>(null);
 
-  const handleFormSubmit = async (data: HeroFormValues) => {
-    const imageInput = (document.getElementById("image-input") as HTMLInputElement)?.files?.[0]
-    const videoInput = (document.getElementById("video-input") as HTMLInputElement)?.files?.[0]
-    onSubmit(data, imageInput, videoInput)
-  }
+  const handleCreateNew = () => {
+    setEditingAsset(null);
+    setOpen(true);
+  };
+
+  const handleEdit = (asset: Asset) => {
+    setEditingAsset(asset);
+    setOpen(true);
+  };
+
+  const handleView = (asset: Asset) => {
+    setViewingAsset(asset);
+  };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Update Hero Section</CardTitle>
-        <p className="text-sm text-muted-foreground">Monitor platform performance and user activity</p>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Title</label>
-              <Input {...register("title")} placeholder="Cardiology" className="border-border" />
-              {errors.title && <p className="text-destructive text-sm mt-1">{errors.title.message}</p>}
+    <section className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Hero Sections</h2>
+        <Button onClick={handleCreateNew}>
+          <Plus className="w-4 h-4 mr-2" />
+          Create Now
+        </Button>
+      </div>
+
+      <HeroTable 
+        data={data} 
+        onView={handleView} 
+        onEdit={handleEdit} 
+        onDelete={onDelete} 
+      />
+
+      <UpdateHeroModal
+        onSubmit={onSubmit}
+        isLoading={isLoading}
+        open={open}
+        setOpen={() => setOpen(!open)}
+        initialData={editingAsset}
+      />
+
+      <Dialog open={!!viewingAsset} onOpenChange={() => setViewingAsset(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Hero Asset Details</DialogTitle>
+          </DialogHeader>
+          {viewingAsset && (
+            <div className="space-y-6 pt-4">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">Section</p>
+                  <p className="text-lg font-semibold capitalize">{viewingAsset.section}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">Type</p>
+                  <p className="text-lg font-semibold capitalize">{viewingAsset.type}</p>
+                </div>
+              </div>
+              
+              <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">Subtitle</p>
+                  <p className="text-base">{viewingAsset.subtitle || "N/A"}</p>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-muted-foreground">Preview</p>
+                <div className="rounded-xl overflow-hidden border border-border bg-muted/30">
+                  {viewingAsset.type === "image" ? (
+                    <img 
+                      src={viewingAsset.url} 
+                      alt={viewingAsset.section} 
+                      className="w-full h-auto max-h-[400px] object-contain mx-auto"
+                    />
+                  ) : (
+                    <video 
+                      src={viewingAsset.url} 
+                      controls 
+                      className="w-full h-auto max-h-[400px] mx-auto"
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
+                <div>Created: {new Date(viewingAsset.createdAt).toLocaleString()}</div>
+                <div>Updated: {new Date(viewingAsset.updatedAt).toLocaleString()}</div>
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Sub Title</label>
-              <Input {...register("subTitle")} placeholder="Dr. Sarah Johnson" className="border-border" />
-              {errors.subTitle && <p className="text-destructive text-sm mt-1">{errors.subTitle.message}</p>}
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-2">Image Upload</label>
-            <label
-              htmlFor="image-input"
-              className="block border-2 border-dashed border-border rounded-lg p-12 text-center cursor-pointer hover:bg-muted/50 transition"
-            >
-              <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-              <p className="text-muted-foreground">Drag and drop files here</p>
-              <p className="text-xs text-muted-foreground">or click to browse</p>
-            </label>
-            <input id="image-input" type="file" accept="image/*" className="hidden" />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-2">Video Upload</label>
-            <label
-              htmlFor="video-input"
-              className="block border-2 border-dashed border-border rounded-lg p-12 text-center cursor-pointer hover:bg-muted/50 transition"
-            >
-              <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-              <p className="text-muted-foreground">Drag and drop files here</p>
-              <p className="text-xs text-muted-foreground">or click to browse</p>
-            </label>
-            <input id="video-input" type="file" accept="video/*" className="hidden" />
-          </div>
-
-          <div className="flex gap-4 pt-4">
-            <Button variant="outline" className="flex-1 bg-transparent">
-              Cancel
-            </Button>
-            <Button disabled={isLoading} className="flex-1 bg-green-600 hover:bg-green-700">
-              {isLoading ? "Adding..." : "Add"}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-  )
+          )}
+        </DialogContent>
+      </Dialog>
+    </section>
+  );
 }

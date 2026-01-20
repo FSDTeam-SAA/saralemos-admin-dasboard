@@ -34,7 +34,6 @@ const UserDetailsPresenter = ({
   isLoading = false,
   profile
 }: PersonalInformationPresenterProps) => {
-  console.log('profile edit data',profile)
   const profileData=profile?.data;
   return (
     <div className="flex-1 bg-white rounded-lg border border-gray-200 p-8">
@@ -66,8 +65,7 @@ const UserDetailsPresenter = ({
                     <Input
                       placeholder="Olivia"
                       {...field}
-                      defaultValue={profileData?.firstName || ""}
-                      className="border-gray-300 focus:border-primary focus:ring-primary"
+                      className="border-gray-300 focus:border-teal-600 focus:ring-teal-600"
                     />
                   </FormControl>
                   <FormMessage />
@@ -86,7 +84,6 @@ const UserDetailsPresenter = ({
                     <Input
                       placeholder="Rhye"
                       {...field}
-                      defaultValue={profileData?.lastName || ""}
                       className="border-gray-300 focus:border-teal-600 focus:ring-teal-600"
                     />
                   </FormControl>
@@ -96,34 +93,6 @@ const UserDetailsPresenter = ({
             />
           </div>
 
-         
-
-          {/* Location and Postal Code Row */}
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            <FormField
-              control={form.control}
-              name="postalCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-700 font-medium">
-                    Postal Code
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="30301"
-                      {...field}
-                      defaultValue={profileData?.postalCode || ""}
-                      className="border-gray-300 focus:border-teal-600 focus:ring-teal-600"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div> */}
-
-          {/* Street and Phone Row */}
           {/* Bio Row */}
           <div className="grid grid-cols-1 gap-6">
              <FormField
@@ -138,7 +107,6 @@ const UserDetailsPresenter = ({
                     <textarea
                       placeholder="Tell us about yourself"
                       {...field}
-                      defaultValue={profileData?.bio || ""}
                        className="flex min-h-[80px] w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 focus:border-teal-600 focus:ring-teal-600"
                     />
                   </FormControl>
@@ -163,7 +131,6 @@ const UserDetailsPresenter = ({
                        type="email"
                       placeholder="bessieedwards@gmail.com"
                       {...field}
-                      defaultValue={profileData?.email || ""}
                       className="border-gray-300 focus:border-teal-600 focus:ring-teal-600"
                     />
                   </FormControl>
@@ -183,7 +150,6 @@ const UserDetailsPresenter = ({
                     <Input
                       placeholder="Enter Your Phone Number"
                       {...field}
-                      defaultValue={profileData?.phoneNumber || ""}
                       className="border-gray-300 focus:border-teal-600 focus:ring-teal-600"
                     />
                   </FormControl>
@@ -207,7 +173,6 @@ const UserDetailsPresenter = ({
                     <Input
                       placeholder="Bangladesh"
                       {...field}
-                       defaultValue={profileData?.country || ""}
                       className="border-gray-300 focus:border-teal-600 focus:ring-teal-600"
                     />
                   </FormControl>
@@ -227,7 +192,6 @@ const UserDetailsPresenter = ({
                     <Input
                       placeholder="Mohakhali"
                       {...field}
-                      defaultValue={profileData?.cityState || ""}
                       className="border-gray-300 focus:border-teal-600 focus:ring-teal-600"
                     />
                   </FormControl>
@@ -251,7 +215,6 @@ const UserDetailsPresenter = ({
                     <Input
                       placeholder="BRAC"
                       {...field}
-                      defaultValue={profileData?.roadArea || ""}
                       className="border-gray-300 focus:border-teal-600 focus:ring-teal-600"
                     />
                   </FormControl>
@@ -271,7 +234,6 @@ const UserDetailsPresenter = ({
                     <Input
                       placeholder="1211"
                       {...field}
-                      defaultValue={profileData?.postalCode || ""}
                       className="border-gray-300 focus:border-teal-600 focus:ring-teal-600"
                     />
                   </FormControl>
@@ -281,58 +243,6 @@ const UserDetailsPresenter = ({
             />
           </div>
 
-
-          {/* Gender */}
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField
-              control={form.control}
-              name="gender"
-              render={({ field }) => (
-                <FormItem>
-                   <FormLabel className="text-gray-700 font-medium">
-                    Gender
-                  </FormLabel>
-                  <FormControl>
-                    <select
-                      {...field}
-                      defaultValue={profileData?.gender || ""}
-                      className="w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600"
-                    >
-                      <option value="">Select Gender</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div> */}
-
-          {/* Email (Read-only if needed) */}
-          {/* <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-gray-700 font-medium">
-                  Email Address (Read-only)
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="bessieedwards@gmail.com"
-                    {...field}
-                    defaultValue={profile?.email || ""}
-                    readOnly
-                    className="border-gray-300 bg-gray-50 focus:border-teal-600 focus:ring-teal-600"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
 
           {/* Action Buttons */}
           <div className="flex gap-4 pt-6">
@@ -346,14 +256,13 @@ const UserDetailsPresenter = ({
                   form.reset({
                     firstName: profileData.firstName || "",
                     lastName: profileData.lastName || "",
-                    country: profileData.country || "",
-                    cityState: profileData.cityState || "",
-                    // email: profileData.email || "",
-                    postalCode: profileData.postalCode || "",
-                    roadArea: profileData.roadArea || "",
-               
+                    country: profileData.address?.country || profileData.country || "",
+                    cityState: profileData.address?.cityState || profileData.cityState || "",
+                    postalCode: profileData.address?.postalCode || profileData.postalCode || "",
+                    roadArea: profileData.address?.roadArea || profileData.roadArea || "",
                     phoneNumber: profileData.phoneNumber || profileData.phone || "",
-                  
+                    bio: profileData.bio || "",
+                    email: profileData.email || "",
                   });
                 }
               }}

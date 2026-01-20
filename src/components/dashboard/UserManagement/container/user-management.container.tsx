@@ -8,17 +8,17 @@ import { UserManagementPresenter } from "./user-management.presenter"
 
 export function UserManagementContainer() {
   const [page, setPage] = useState(1)
-  const { data, isLoading, error } = useUsers(page, 10)
+  const { data, isLoading, error } = useUsers()
   const deleteUserMutation = useDeleteUser()
-
   const handleDeleteUser = (id: string) => {
     if (confirm("Are you sure you want to delete this user?")) {
       deleteUserMutation.mutate(id)
     }
   }
 
-  const users = data?.data?.items || []
-  const total = data?.data?.total || 0
+  const users = data?.data?.data?.users || []
+  const paginationInfo = data?.data?.data?.paginationInfo
+  const total = paginationInfo?.totalData || users.length
   const totalPages = Math.ceil(total / 10)
 
   return (
