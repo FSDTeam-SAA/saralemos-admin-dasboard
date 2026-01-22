@@ -1,46 +1,84 @@
 "use client";
 
-import { useState } from "react";
-// import useAuth from "@/lib/hooks/useAuth";
-// import { toast } from "sonner";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useSentOtp } from "@/lib/hooks/useAuth";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 export default function VerifyOTP() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const { mutate, isPending } = useSentOtp();
   const router = useRouter();
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  // const { handleVerifyOtp, loading } = useAuth();
+  useEffect(() => {
+    inputRefs.current[0]?.focus();
+  }, []);
 
   const handleChange = (value: string, index: number) => {
-    if (value.length > 1) return;
+    if (value.length > 1) {
+      // Handle paste
+      const pastedData = value.slice(0, 6).split("");
+      const newOtp = [...otp];
+      pastedData.forEach((char, i) => {
+        if (index + i < 6) newOtp[index + i] = char;
+      });
+      setOtp(newOtp);
+      const nextIndex = Math.min(index + pastedData.length, 5);
+      inputRefs.current[nextIndex]?.focus();
+      return;
+    }
 
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
     if (value && index < 5) {
-      document.getElementById(`otp-${index + 1}`)?.focus();
+      inputRefs.current[index + 1]?.focus();
     }
   };
 
-  // const handleVerify = async () => {
-  //   const otpCode = otp.join("");
-  //   const res = await handleVerifyOtp(otpCode);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    } else if (e.key === "Enter") {
+      handleVerify();
+    }
+  };
 
-  //   if (res?.success) {
-  //     toast.success("OTP verified successfully!");
+  const handleVerify = () => {
+    const otpCode = otp.join("");
+    if (otpCode.length < 6) {
+      toast.error("Please enter the full 6-digit code");
+      return;
+    }
 
-  //     setTimeout(() => {
-  //       router.push(`/reset-password`);
-  //     }, 1000);
-  //   } else {
-  //     toast.error(res?.message || "Failed to verify OTP");
-  //   }
-  // };
+    const email = localStorage.getItem("resetEmail");
+    if (!email) {
+      toast.error("Session expired. Please try resetting your password again.");
+      router.push("/forget-password");
+      return;
+    }
+
+    mutate(
+      { otp: otpCode, email },
+      {
+        onSuccess: (data) => {
+          toast.success(data.message || "OTP verified successfully!");
+          router.push("/reset-password");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Invalid OTP. Please try again.");
+        },
+      }
+    );
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center  px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       {/* Card */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -77,16 +115,20 @@ export default function VerifyOTP() {
               transition: { staggerChildren: 0.08 },
             },
           }}
-          className="flex items-center gap-3 justify-center mb-4"
+          className="flex items-center gap-3 justify-center mb-8"
         >
           {otp.map((digit, i) => (
             <motion.input
               key={i}
+              ref={(el) => {
+                inputRefs.current[i] = el;
+              }}
               id={`otp-${i}`}
               type="text"
               maxLength={1}
               value={digit}
               onChange={(e) => handleChange(e.target.value, i)}
+              onKeyDown={(e) => handleKeyDown(e, i)}
               variants={{
                 hidden: { opacity: 0, scale: 0.9 },
                 visible: { opacity: 1, scale: 1 },
@@ -94,32 +136,34 @@ export default function VerifyOTP() {
               className={`w-14 h-14 text-2xl text-center border rounded-lg outline-none transition
                 ${
                   digit
-                    ? "border-[#00C8B3] text-[#00C8B3]"
-                    : "border-gray-300 text-gray-700"
+                    ? "border-[#65A30D] text-[#65A30D]"
+                    : "border-gray-300 text-gray-700 focus:border-[#65A30D]"
                 }`}
             />
           ))}
         </motion.div>
 
         {/* Verify Button */}
-        {/* <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.97 }}
-          className={`w-full bg-gradient-to-r from-[#005DAA] to-[#00C8B3] text-white py-3 rounded-md text-lg font-medium transition
-            ${
-              loading
-                ? "opacity-60 cursor-not-allowed"
-                : "hover:bg-gradient-to-r from-[#005DAA] to-[#00C8B3] cursor-pointer"
-            }`}
-          onClick={handleVerify}
-          disabled={loading}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
         >
-          {loading ? "Verifying..." : "Verify"}
-        </motion.button> */}
-
-        <div>
-          <button className="w-full bg-[#65A30D] text-white p-2 rounded-md text-base sm:text-lg font-medium transition flex justify-center items-center gap-2 cursor-pointer">Verify</button>
-        </div>
+          <Button
+            onClick={handleVerify}
+            disabled={isPending}
+            className="w-full bg-[#65A30D] hover:bg-[#54870b] text-white h-12 text-lg font-medium transition flex justify-center items-center gap-2 cursor-pointer"
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="animate-spin" size={20} />
+                Verifying...
+              </>
+            ) : (
+              "Verify"
+            )}
+          </Button>
+        </motion.div>
       </motion.div>
     </div>
   );

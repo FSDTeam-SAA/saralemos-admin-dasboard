@@ -2,29 +2,46 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-// import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
-import { Mail } from "lucide-react";
-// import useAuth from "@/lib/hooks/useAuth";
+import { Mail, Loader2 } from "lucide-react";
+import { useForgetPassword } from "@/lib/hooks/useAuth";
+import { toast } from "sonner";
 
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
+  const { mutate, isPending } = useForgetPassword();
   const router = useRouter();
-  // const { loading, handleForgotPassword } = useAuth();
 
-  // const handleSendCode = async () => {
-  //   // const response = await handleForgotPassword(email);
+  const handleSendCode = () => {
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
 
-  //   if (response.success) {
-  //     localStorage.setItem("email", email);
-  //     router.push(`/verify-otp`);
-  //   }
-  // };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    mutate(email, {
+      onSuccess: (data) => {
+        toast.success(data.message || "OTP sent to your email. Please check.");
+        localStorage.setItem("resetEmail", email);
+        router.push(`/verify-otp`);
+      },
+      onError: (error) => {
+        console.log('error',error)
+        toast.error(error.message || "Failed to send OTP. Please try again.");
+      },
+    });
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center p-4">
       {/* Card */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -71,7 +88,7 @@ export default function ForgetPassword() {
               visible: { opacity: 1, y: 0 },
             }}
           >
-            <Label>Email Address</Label>
+            <Label htmlFor="email">Email Address</Label>
 
             <div className="relative mt-1">
               <Mail
@@ -80,29 +97,39 @@ export default function ForgetPassword() {
               />
 
               <Input
+                id="email"
                 type="email"
-                className="pl-10 py-5"
+                className="pl-10 h-10"
                 placeholder="hello@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSendCode()}
               />
             </div>
           </motion.div>
 
           {/* Button */}
-          {/* <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 10 },
+              visible: { opacity: 1, y: 0 },
+            }}
+          >
             <Button
-              className="w-full bg-gradient-to-r from-[#005DAA] to-[#00C8B3] mt-4 text-white cursor-pointer"
               onClick={handleSendCode}
-              disabled={loading}
+              disabled={isPending}
+              className="w-full bg-[#65A30D] hover:bg-[#54870b] text-white h-11 text-base font-medium transition flex justify-center items-center gap-2 cursor-pointer"
             >
-              {loading ? "Sending..." : "Send Code"}
+              {isPending ? (
+                <>
+                  <Loader2 className="animate-spin" size={18} />
+                  Sending...
+                </>
+              ) : (
+                "Send Code"
+              )}
             </Button>
-          </motion.div> */}
-
-          <div>
-            <button className="w-full bg-[#65A30D] text-white p-2 rounded-md text-base sm:text-lg font-medium transition flex justify-center items-center gap-2 cursor-pointer">Send Code</button>
-          </div>
+          </motion.div>
         </motion.div>
       </motion.div>
     </div>

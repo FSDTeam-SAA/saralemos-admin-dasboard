@@ -32,6 +32,41 @@ api.interceptors.request.use(
 
 export default api;
 
+export async function forgetPassword(email:string) {
+  try{
+         const res= await api.post(`/auth/forget-password`,{email:email});
+         return res.data;
+  }catch(error){
+    if(error instanceof  Error){
+      throw new Error(error.message || 'failed to forget password')
+    }
+  }
+  
+}
+export async function sentOtp(otp:string,email:string) {
+  try{
+         const res= await api.post(`/auth/verify-code`,{otp:otp, email:email});
+         return res.data;
+  }catch(error){
+    if(error instanceof  Error){
+      throw new Error(error.message || 'failed to forget password')
+    }
+  }
+  
+}
+
+export async function resetPassword(newPassword:string,email:string) {
+  try{
+         const res= await api.post(`/auth/reset-password`,{email:email,newPassword:newPassword});
+         return res.data;
+  }catch(error){
+    if(error instanceof  Error){
+      throw new Error(error.message || 'failed to forget password')
+    }
+  }
+  
+}
+
 async function apiCall<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> {
   try {
     const { body, method, headers, ...rest } = options || {}

@@ -48,6 +48,8 @@ export function DashboardPresenter({ stats, isLoading, error,data }: DashboardPr
     return <div className="bg-destructive/10 text-destructive p-4 rounded-lg">Error: {error}</div>
   }
 
+  console.log('data',data)
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -68,7 +70,7 @@ export function DashboardPresenter({ stats, isLoading, error,data }: DashboardPr
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Active Subscriptions</p>
-                <p className="text-2xl font-bold text-primary">{data?.activeSubscriptions || 92}</p>
+                <p className="text-2xl font-bold text-primary">{data?.activeSubscriptions ? data?.activeSubscriptions : 0}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-primary" />
             </div>
@@ -80,7 +82,7 @@ export function DashboardPresenter({ stats, isLoading, error,data }: DashboardPr
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Monthly Revenue</p>
-                <p className="text-2xl font-bold text-primary">${data?.monthlyRevenue?.amount || 20300}</p>
+                <p className="text-2xl font-bold text-primary">${data?.monthlyRevenue?.amount || 0}</p>
               </div>
               <DollarSign className="w-8 h-8 text-primary" />
             </div>
@@ -92,7 +94,7 @@ export function DashboardPresenter({ stats, isLoading, error,data }: DashboardPr
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Listings Processed</p>
-                <p className="text-2xl font-bold text-primary">{stats?.listingsProcessed || 85}</p>
+                <p className="text-2xl font-bold text-primary">{data?.totalListings || 0}</p>
               </div>
               <Package className="w-8 h-8 text-primary" />
             </div>

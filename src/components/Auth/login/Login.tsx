@@ -53,7 +53,7 @@ export default function Login() {
       >
         {/* Heading */}
         <h1 className="text-4xl font-semibold text-[#65A30D] text-center">
-          Wellcome
+          Welcome
         </h1>
         <p className="text-[#6C757D] mt-2 text-xl text-center">
           Sign in to your yacht broker account
