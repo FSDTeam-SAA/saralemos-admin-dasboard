@@ -6,6 +6,7 @@ export type MonthlyRevenue = {
 };
 
 export type DashboardData = {
+  [x: string]: number;
   totalUsers: number;
   activeSubscriptions: number;
   monthlyRevenue: MonthlyRevenue;
