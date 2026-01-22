@@ -9,11 +9,12 @@ import { CreateSubscriptionValues } from "../common/subscriptions.schema";
 import { SubscriptionPlanCard } from "../common/subscription-plan-card";
 import { CreateSubscriptionModal } from "../common/create-subscription-modal";
 import { RevenueMetricsComponent } from "../common/revenue-metrics";
+import { PaymentMetricsData, PlanAnalyticsData } from "@/lib/types/subscription";
 
 interface SubscriptionsPresenterProps {
   plans: SubscriptionPlan[];
   // promoCodes: PromoCode[]
-  metrics: RevenueMetrics;
+
   isLoading: boolean;
   error?: string | null;
   onCreatePlan: (data: CreateSubscriptionValues) => void;
@@ -23,17 +24,22 @@ interface SubscriptionsPresenterProps {
   onPageChange: (page: number) => void;
   currentPage: number;
   totalPages?: number;
+  seeDetail:(id:string)=>void;
+  singleplan:PlanAnalyticsData;
+    revenuemetricsData:PaymentMetricsData;
 }
 
 export function SubscriptionsPresenter({
   plans,
 
-  metrics,
+
   isLoading,
   error,
   onCreatePlan,
   onDeletePlan,
-
+  seeDetail,
+singleplan,
+revenuemetricsData,
   isCreatingPlan = false,
 }: SubscriptionsPresenterProps) {
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -59,7 +65,7 @@ export function SubscriptionsPresenter({
   return (
     <div className="space-y-8">
       {/* Revenue Metrics */}
-      <RevenueMetricsComponent metrics={metrics} />
+      <RevenueMetricsComponent revenuemetricsData={revenuemetricsData} />
 
       {/* Subscription Plans */}
       <div className="space-y-4">
@@ -75,14 +81,15 @@ export function SubscriptionsPresenter({
             Create Subscription
           </Button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-4">
           {plans.map((plan, index) => (
             <SubscriptionPlanCard
               key={index}
               plan={plan}
               onDelete={onDeletePlan}
-              isHighlighted={index === 1}
-              // isHighlighted={plan.name === "Professional" || plan.name === "Enterprise"}
+              isHighlighted={index===1}
+              seeDetail={seeDetail}
+              singleplan={singleplan}
             />
           ))}
         </div>

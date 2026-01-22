@@ -1,63 +1,85 @@
-"use client"
+"use client";
 
-import { TrendingUp, Users, DollarSign, Zap } from "lucide-react"
-import type { RevenueMetrics as MetricsType } from "./subscriptions.types"
+import { TrendingUp, Users, DollarSign, Zap } from "lucide-react";
+import { PaymentMetricsData } from "@/lib/types/subscription";
 
 interface RevenueMetricsProps {
-  metrics: MetricsType
+  revenuemetricsData?: PaymentMetricsData;
 }
 
-export function RevenueMetricsComponent({ metrics }: RevenueMetricsProps) {
+export function RevenueMetricsComponent({
+  revenuemetricsData,
+}: RevenueMetricsProps) {
+  if (!revenuemetricsData) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-pulse">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="bg-white border border-border rounded-xl p-5 h-[120px]" />
+        ))}
+      </div>
+    );
+  }
+console.log('revienew',revenuemetricsData)
   const metricCards = [
     {
-      label: "Total MRR",
-      value: `$${metrics.mrr.toLocaleString()}`,
-      change: `+${metrics.mrrChange.toFixed(1)}% this month`,
-      icon: DollarSign,
-      color: "text-green-600",
-    },
-    {
-      label: "ARPU",
-      value: `$${metrics.arpu.toFixed(2)}`,
-      change: "Avg per premium user",
+      label: "MRR",
+      value: `$${revenuemetricsData?.MRR?.value.toLocaleString() || 0}`,
+      
+      change: revenuemetricsData?.MRR?.description,
       icon: TrendingUp,
       color: "text-blue-600",
     },
     {
-      label: "LTV",
-      value: `$${metrics.ltv.toLocaleString()}`,
-      change: "Customer lifetime value",
+      label: "ARPU",
+      value: `$${revenuemetricsData?.ARPU?.value.toLocaleString() || 0}`,
+      change: revenuemetricsData?.ARPU?.description,
       icon: Users,
-      color: "text-purple-600",
+      color: "text-[#65A30D]",
+    },
+    {
+      label: "LTV",
+      value: `$${revenuemetricsData?.LTV?.value.toLocaleString() || 0}`,
+      change: revenuemetricsData?.LTV?.description,
+      icon: DollarSign,
+      color: "text-amber-600",
     },
     {
       label: "CAC Ratio",
-      value: `${metrics.cacRatio.toFixed(2)}x`,
-      change: "LTV/CAC healthy",
+      value: `${revenuemetricsData?.CAC?.value || 0}`,
+      change: revenuemetricsData?.CAC?.note,
       icon: Zap,
-      color: "text-amber-600",
+      color: "text-purple-600",
     },
-  ]
+  ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {metricCards.map((metric) => {
-        const Icon = metric.icon
+console.log('dis',metric.change)
         return (
-          <div key={metric.label} className="bg-background border border-border rounded-lg p-6">
+          <div
+            key={metric.label}
+            className="bg-white border border-border rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow"
+          >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">{metric.label}</p>
-                <p className="text-2xl font-bold text-foreground mt-2">{metric.value}</p>
-                <p className="text-xs text-muted-foreground mt-1">{metric.change}</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  {metric.label}
+                </p>
+                <p className="text-2xl text-primary font-black  mt-2">
+                  {metric.value ? metric.value : 0}
+                </p>
+                <p className="text-[12px] font-medium text-[#4A5565] mt-1 ">
+                  {metric.change}
+                </p>
               </div>
-              <div className={`${metric.color} bg-opacity-10 p-3 rounded-lg`}>
-                <Icon className={`w-6 h-6 ${metric.color}`} />
-              </div>
+              {/* <div className={`${metric.color} bg-current bg-opacity-10 p-2.5 rounded-xl`}>
+                <Icon className="w-5 h-5" />
+              </div> */}
             </div>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

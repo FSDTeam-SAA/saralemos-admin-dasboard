@@ -50,7 +50,7 @@ export function Sidebar() {
       <div className="absolute bottom-8 left-4">
         <button 
           onClick={() => signOut({ callbackUrl: "/login" })}
-          className="flex items-center gap-3 px-4 py-2 text-destructive hover:text-destructive/80 transition-colors"
+          className="flex items-center gap-3 cursor-pointer bg-red-100 hover:bg-red-200 rounded-2xl px-4 py-2 text-destructive hover:text-destructive/80 transition-colors"
         >
           <LogOut className="w-5 h-5" />
           <span>Log Out</span>

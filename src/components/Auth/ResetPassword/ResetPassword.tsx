@@ -1,46 +1,67 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, EyeOff, LoaderCircle, Lock } from "lucide-react";
-// import useAuth from "@/lib/hooks/useAuth";
-// import { toast } from "sonner";
-// import { useRouter } from "next/navigation";
+import { Eye, EyeOff, Lock, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useResetPassword } from "@/lib/hooks/useAuth";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 export default function ResetPassword() {
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const { mutate, isPending } = useResetPassword();
+  const router = useRouter();
 
-  // const { handleResetPassword, loading } = useAuth();
-  // const router = useRouter();
+  const handleSave = () => {
+    if (!newPassword || !confirmPassword) {
+      toast.error("Please fill in all fields");
+      return;
+    }
 
-  // const handleSave = async () => {
-  //   if (newPassword !== confirmPassword) {
-  //     toast.error("Passwords do not match!");
-  //     return;
-  //   }
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
 
-    // const res = await handleResetPassword(newPassword);
-    // if (res.success) {
-    //   toast.success("Password reset successfully!");
-    //   localStorage.removeItem("email");
-    //   localStorage.removeItem("resetToken");
-    //   router.push("/login");
-    // } else {
-    //   toast.error(res.message || "Something went wrong!");
+    // if (newPassword.length < 8) {
+    //   toast.error("Password must be at least 8 characters long");
+    //   return;
     // }
-  // };
+
+    const email = localStorage.getItem("resetEmail");
+    if (!email) {
+      toast.error("Session expired. Please start the reset process again.");
+      router.push("/forget-password");
+      return;
+    }
+
+    mutate(
+      { newPassword, email },
+      {
+        onSuccess: (data) => {
+          toast.success(data.message || "Password reset successful! Please login.");
+          localStorage.removeItem("resetEmail");
+          router.push("/login");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Something went wrong. Please try again.");
+        },
+      }
+    );
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center  px-4 w-[500px]">
+    <div className="min-h-screen flex items-center justify-center px-4">
       {/* Card */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
-        className="w-full max-w-[550px] bg-white rounded-2xl shadow-lg px-6 sm:px-8 py-8 sm:py-10"
+        className="w-full max-w-lg bg-white rounded-2xl shadow-lg px-6 sm:px-8 py-8 sm:py-10"
       >
         {/* Header */}
         <motion.h2
@@ -71,6 +92,7 @@ export default function ResetPassword() {
               transition: { staggerChildren: 0.1 },
             },
           }}
+          className="space-y-5"
         >
           {/* New Password */}
           <motion.div
@@ -78,7 +100,6 @@ export default function ResetPassword() {
               hidden: { opacity: 0, y: 10 },
               visible: { opacity: 1, y: 0 },
             }}
-            className="mb-5"
           >
             <label className="block text-[#65A30D] font-medium mb-1">
               New Password
@@ -96,12 +117,13 @@ export default function ResetPassword() {
                 placeholder="********"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSave()}
               />
 
               <button
                 type="button"
                 onClick={() => setShowPassword1(!showPassword1)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6C757D]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6C757D] cursor-pointer"
               >
                 {showPassword1 ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -114,7 +136,6 @@ export default function ResetPassword() {
               hidden: { opacity: 0, y: 10 },
               visible: { opacity: 1, y: 0 },
             }}
-            className="mb-8"
           >
             <label className="block text-[#65A30D] font-medium mb-1">
               Confirm New Password
@@ -132,6 +153,7 @@ export default function ResetPassword() {
                 placeholder="********"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSave()}
               />
 
               <button
@@ -145,20 +167,27 @@ export default function ResetPassword() {
           </motion.div>
 
           {/* Button */}
-          {/* <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            className={`w-full bg-gradient-to-r from-[#005DAA] to-[#00C8B3] text-white p-3 rounded-md text-base sm:text-lg font-medium transition flex justify-center items-center gap-2 cursor-pointer ${
-              loading ? "cursor-not-allowed opacity-70" : ""
-            }`}
-            onClick={handleSave}
-            disabled={loading}
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 10 },
+              visible: { opacity: 1, y: 0 },
+            }}
           >
-            {loading && <LoaderCircle className="animate-spin" />}
-            {loading ? "Saving..." : "Confirm"}
-          </motion.button> */}
-
-          <button className="w-full bg-[#65A30D] text-white p-2 rounded-md text-base sm:text-lg font-medium transition flex justify-center items-center gap-2 cursor-pointer">Confirm</button>
+            <Button
+              onClick={handleSave}
+              disabled={isPending}
+              className="w-full bg-[#65A30D] hover:bg-[#54870b] text-white h-12 text-lg font-medium transition flex justify-center items-center gap-2 cursor-pointer"
+            >
+              {isPending ? (
+                <>
+                  <Loader2 className="animate-spin" size={20} />
+                  Saving...
+                </>
+              ) : (
+                "Confirm"
+              )}
+            </Button>
+          </motion.div>
         </motion.div>
       </motion.div>
     </div>
