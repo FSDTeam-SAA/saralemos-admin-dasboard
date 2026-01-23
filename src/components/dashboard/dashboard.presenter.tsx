@@ -1,11 +1,11 @@
 "use client"
 
 
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts"
 import { Users, TrendingUp, DollarSign, Package } from "lucide-react"
 import { DashboardStats } from "@/types/user"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
-import { DashboardData, UserAnalyticsDataPoint } from "@/lib/types/overall"
+import { DashboardData, MonthlyRevenue, UserAnalyticsDataPoint } from "@/lib/types/overall"
 
 
 interface DashboardPresenterProps {
@@ -14,20 +14,14 @@ interface DashboardPresenterProps {
   error: string | null
   data:DashboardData;
   analytics:UserAnalyticsDataPoint[];
+  revenueAnalytics:MonthlyRevenue[]
 }
 
 
 
-const revenueData = [
-  { month: "Jan", revenue: 10000 },
-  { month: "Feb", revenue: 12000 },
-  { month: "Mar", revenue: 15000 },
-  { month: "Apr", revenue: 18000 },
-  { month: "May", revenue: 22000 },
-  { month: "Jun", revenue: 28000 },
-]
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-export function DashboardPresenter({ stats, isLoading, error,data,analytics }: DashboardPresenterProps) {
+export function DashboardPresenter({ stats, isLoading, error,data,analytics,revenueAnalytics }: DashboardPresenterProps) {
   if (isLoading) {
     return <div className="text-center text-muted-foreground">Loading dashboard...</div>
   }
@@ -101,13 +95,30 @@ export function DashboardPresenter({ stats, isLoading, error,data,analytics }: D
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={analytics}>
+              <AreaChart data={analytics}>
+                <defs>
+                  <linearGradient id="colorUserCount" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#6BA814" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#6BA814" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-                <XAxis dataKey="month" stroke="var(--color-muted-foreground)" />
-                <YAxis stroke="var(--color-muted-foreground)" />
+                <XAxis 
+                  dataKey="month" 
+                  stroke="var(--color-muted-foreground)" 
+                  tickFormatter={(value) => MONTHS[value - 1] || value}
+                />
+                <YAxis stroke="var(--color-muted-foreground)" domain={[0, 'auto']} />
                 <Tooltip contentStyle={{ backgroundColor: "var(--color-card)" }} />
-                <Line type="monotone" dataKey="userCount" stroke="#6BA814" strokeWidth={2} />
-              </LineChart>
+                <Area 
+                  type="monotone" 
+                  dataKey="userCount" 
+                  stroke="#6BA814" 
+                  fillOpacity={1} 
+                  fill="url(#colorUserCount)" 
+                  strokeWidth={2} 
+                />
+              </AreaChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
@@ -118,12 +129,12 @@ export function DashboardPresenter({ stats, isLoading, error,data,analytics }: D
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={revenueData}>
+              <BarChart data={revenueAnalytics}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                 <XAxis dataKey="month" stroke="var(--color-muted-foreground)" />
                 <YAxis stroke="var(--color-muted-foreground)" />
                 <Tooltip contentStyle={{ backgroundColor: "var(--color-card)" }} />
-                <Bar dataKey="revenue" fill="#6BA814" />
+                <Bar dataKey="amount" fill="#6BA814" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

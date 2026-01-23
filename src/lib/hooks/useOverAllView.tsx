@@ -16,9 +16,9 @@ export function useUserAnalytics(){
     })
 }
 
-export function useRevenue(){
+export function useRevenue(startDate?: string, endDate?: string){
     return useQuery({
-        queryKey:['revenue',],
-        queryFn:()=>revenueAnalytics()
+        queryKey:['revenue', startDate, endDate],
+        queryFn:()=>revenueAnalytics(startDate, endDate)
     })
 }
