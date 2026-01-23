@@ -29,9 +29,14 @@ export async function usersanlytics() {
 }
 
 
-export async function revenueAnalytics() {
+export async function revenueAnalytics(startDate?: string, endDate?: string) {
    try{
-    const res= await api.get(`1/dashboard/revenue-trend-range?startDate=2026-01-01&endDate=2026-12-31`);
+    const res= await api.get(`/dashboard/revenue-trend-range?`, {
+        params: {
+            startDate,
+            endDate
+        }
+    });
     return res.data;
    }catch(error){
     if(error instanceof Error){

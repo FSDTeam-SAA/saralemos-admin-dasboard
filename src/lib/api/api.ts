@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ApiResponse, PaginatedResponse } from "@/types/api"
+import type { ApiResponse } from "@/types/api"
 import type {   SubscriptionPlan, RevenueMetrics } from "@/types/user"
 
 import axios from "axios";
