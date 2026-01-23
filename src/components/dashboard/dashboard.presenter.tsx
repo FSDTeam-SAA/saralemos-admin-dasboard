@@ -5,7 +5,7 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { Users, TrendingUp, DollarSign, Package } from "lucide-react"
 import { DashboardStats } from "@/types/user"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
-import { DashboardData } from "@/lib/types/overall"
+import { DashboardData, UserAnalyticsDataPoint } from "@/lib/types/overall"
 
 
 interface DashboardPresenterProps {
@@ -13,22 +13,10 @@ interface DashboardPresenterProps {
   isLoading: boolean
   error: string | null
   data:DashboardData;
+  analytics:UserAnalyticsDataPoint[];
 }
 
-const usageData = [
-  { month: "Jan", value: 60 },
-  { month: "Feb", value: 80 },
-  { month: "Mar", value: 120 },
-  { month: "Apr", value: 100 },
-  { month: "May", value: 150 },
-  { month: "June", value: 180 },
-  { month: "Jul", value: 160 },
-  { month: "Aug", value: 140 },
-  { month: "Sep", value: 100 },
-  { month: "Oct", value: 120 },
-  { month: "Nov", value: 110 },
-  { month: "Dec", value: 130 },
-]
+
 
 const revenueData = [
   { month: "Jan", revenue: 10000 },
@@ -39,7 +27,7 @@ const revenueData = [
   { month: "Jun", revenue: 28000 },
 ]
 
-export function DashboardPresenter({ stats, isLoading, error,data }: DashboardPresenterProps) {
+export function DashboardPresenter({ stats, isLoading, error,data,analytics }: DashboardPresenterProps) {
   if (isLoading) {
     return <div className="text-center text-muted-foreground">Loading dashboard...</div>
   }
@@ -49,6 +37,9 @@ export function DashboardPresenter({ stats, isLoading, error,data }: DashboardPr
   }
 
   console.log('data',data)
+  console.log('analytics',analytics)
+
+
 
   return (
     <div className="space-y-6">
@@ -105,17 +96,17 @@ export function DashboardPresenter({ stats, isLoading, error,data }: DashboardPr
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <h3 className="font-semibold">Usage Analytics</h3>
+            <h3 className="font-semibold">Users Analytics</h3>
             <p className="text-xs text-muted-foreground">March, 2025</p>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={usageData}>
+              <LineChart data={analytics}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                 <XAxis dataKey="month" stroke="var(--color-muted-foreground)" />
                 <YAxis stroke="var(--color-muted-foreground)" />
                 <Tooltip contentStyle={{ backgroundColor: "var(--color-card)" }} />
-                <Line type="monotone" dataKey="value" stroke="#6BA814" strokeWidth={2} />
+                <Line type="monotone" dataKey="userCount" stroke="#6BA814" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
