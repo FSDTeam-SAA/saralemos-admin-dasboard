@@ -1,7 +1,7 @@
 "use client"
 
 
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label } from "recharts"
 import { Users, TrendingUp, DollarSign, Package } from "lucide-react"
 import { DashboardStats } from "@/types/user"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
@@ -118,12 +118,23 @@ export function DashboardPresenter({ stats, isLoading, error,data,analytics,reve
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={revenueAnalytics}>
+              <BarChart data={revenueAnalytics} margin={{ bottom: 20, left: 10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-                <XAxis dataKey="month" stroke="var(--color-muted-foreground)" />
-                <YAxis stroke="var(--color-muted-foreground)" />
+                <XAxis 
+                  dataKey="month" 
+                  stroke="#6BA814" 
+                  tick={{ fill: '#6BA814' }}
+                >
+                  <Label value="Month" position="insideBottom" offset={-15} fill="#6BA814" />
+                </XAxis>
+                <YAxis 
+                  stroke="#6BA814" 
+                  tick={{ fill: '#6BA814' }}
+                >
+                  <Label value="Amount" angle={-90} position="insideLeft" offset={0} style={{ textAnchor: 'middle' }} fill="#6BA814" />
+                </YAxis>
                 <Tooltip contentStyle={{ backgroundColor: "var(--color-card)" }} />
-                <Bar dataKey="amount" fill="#6BA814" />
+                <Bar dataKey="amount" fill="#6BA814" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
