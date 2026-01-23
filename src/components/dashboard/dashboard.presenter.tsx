@@ -1,27 +1,29 @@
 "use client"
 
 
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts"
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 import { Users, TrendingUp, DollarSign, Package } from "lucide-react"
 import { DashboardStats } from "@/types/user"
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import { DashboardData, MonthlyRevenue, UserAnalyticsDataPoint } from "@/lib/types/overall"
+import { User } from "@/lib/types/users"
 
 
 interface DashboardPresenterProps {
   stats: DashboardStats | null
   isLoading: boolean
   error: string | null
-  data:DashboardData;
-  analytics:UserAnalyticsDataPoint[];
-  revenueAnalytics:MonthlyRevenue[]
+  data: DashboardData | undefined;
+  analytics: UserAnalyticsDataPoint[];
+  revenueAnalytics: MonthlyRevenue[];
+  userData: User[]
 }
 
 
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-export function DashboardPresenter({ stats, isLoading, error,data,analytics,revenueAnalytics }: DashboardPresenterProps) {
+export function DashboardPresenter({ stats, isLoading, error,data,analytics,revenueAnalytics,userData }: DashboardPresenterProps) {
   if (isLoading) {
     return <div className="text-center text-muted-foreground">Loading dashboard...</div>
   }
@@ -95,30 +97,17 @@ export function DashboardPresenter({ stats, isLoading, error,data,analytics,reve
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={analytics}>
-                <defs>
-                  <linearGradient id="colorUserCount" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6BA814" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#6BA814" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
+              <LineChart data={analytics}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                 <XAxis 
                   dataKey="month" 
                   stroke="var(--color-muted-foreground)" 
                   tickFormatter={(value) => MONTHS[value - 1] || value}
                 />
-                <YAxis stroke="var(--color-muted-foreground)" domain={[0, 'auto']} />
+                <YAxis stroke="var(--color-muted-foreground)" />
                 <Tooltip contentStyle={{ backgroundColor: "var(--color-card)" }} />
-                <Area 
-                  type="monotone" 
-                  dataKey="userCount" 
-                  stroke="#6BA814" 
-                  fillOpacity={1} 
-                  fill="url(#colorUserCount)" 
-                  strokeWidth={2} 
-                />
-              </AreaChart>
+                <Line type="monotone" dataKey="userCount" stroke="#6BA814" strokeWidth={2} />
+              </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
@@ -143,23 +132,25 @@ export function DashboardPresenter({ stats, isLoading, error,data,analytics,reve
 
       <Card>
         <CardHeader>
-          <h3 className="font-semibold">Recent Activity</h3>
+          <h3 className="font-semibold">Recent Registered Users</h3>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {[
-              { user: "Sarah Johnson", action: "New user registered", time: "5 minutes ago" },
-              { user: "John Doe", action: "Upgraded to Premium", time: "23 minutes ago" },
-              { user: "52ft Sunseeker", action: "New listing Added", time: "1 hour ago" },
-            ].map((activity, i) => (
-              <div key={i} className="flex justify-between items-center py-2 border-b border-border last:border-0">
-                <div>
-                  <p className="font-medium text-sm">{activity.user}</p>
-                  <p className="text-xs text-muted-foreground">{activity.action}</p>
+            {userData.length > 0 ? (
+              userData.slice(0, 5).map((user, i) => (
+                <div key={user._id || i} className="flex justify-between items-center py-2 border-b border-border last:border-0">
+                  <div>
+                    <p className="font-medium text-sm">{user.fullName || user.name}</p>
+                    <p className="text-xs text-muted-foreground">{user.email}</p>
+                  </div>
+                  <span className="text-xs text-muted-foreground">
+                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Recently'}
+                  </span>
                 </div>
-                <span className="text-xs text-muted-foreground">{activity.time}</span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground">No recent registered users</p>
+            )}
           </div>
         </CardContent>
       </Card>
