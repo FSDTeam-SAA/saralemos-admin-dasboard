@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { changePassword, getUserProfile, userProfileUpdate, uploadUserAvatar as uploadAvatar } from "../api/profile";
-import { UserProfile } from "@/types/profile";
+// import { UserProfile } from "@/types/profile";
 import { toast } from "sonner";
 
 

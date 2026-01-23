@@ -85,7 +85,7 @@ const handler = NextAuth({
             name: token.name,
             accessToken: token.accessToken,
             refreshToken: token.refreshToken
-        } as any; // Type assertion to avoid strict checks usually needed here if types are tricky
+        }; // Type assertion to avoid strict checks usually needed here if types are tricky
         
         session.accessToken = token.accessToken as string;
       }

@@ -2,15 +2,15 @@
 
 import { Badge } from "@/components/ui/badge";
 import {
-  MoreVertical,
+ 
   Trash2,
-  Image as ImageIcon,
-  Video,
+  Image as 
+
   PencilIcon,
   Eye,
 } from "lucide-react";
 import { Asset } from "@/lib/types/hero";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 interface HeroTableProps {
