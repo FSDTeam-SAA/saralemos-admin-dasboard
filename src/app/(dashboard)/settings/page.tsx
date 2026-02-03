@@ -2,6 +2,7 @@
 
 import { DashboardLayout } from "@/components/dashboard/layout/DashboardLayout";
 import SettingsMain from "@/components/dashboard/setting/SettingsMain";
+import Setup from "@/components/dashboard/setting/Setup";
 
 const page = () => {
   return (
@@ -9,7 +10,8 @@ const page = () => {
       title="Subscriptions & Promo Codes"
       description="Manage plans, pricing, and promotional offers"
     >
-      <SettingsMain />
+      {/* <SettingsMain /> */}
+      <Setup />
     </DashboardLayout>
   );
 };

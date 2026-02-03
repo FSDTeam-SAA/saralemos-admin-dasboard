@@ -18,7 +18,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="w-64 border-r border-border bg-background">
+    <div className="w-64 border-r border-border bg-background ">
       <div className="p-6 flex items-center justify-center gap-2">
         <Link href={'/'}>
         

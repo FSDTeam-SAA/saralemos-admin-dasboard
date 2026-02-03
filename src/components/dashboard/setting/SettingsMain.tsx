@@ -23,12 +23,12 @@ const SettingsMain = () => {
           
           {/* Main Content */}
           <div className="lg:col-span-3">
-            <div className='flex gap-3 mb-5'>
+            {/* <div className='flex gap-3 mb-5'>
                 <Button className='bg-[#65A30D] cursor-pointer ' onClick={()=>setActiveTab('Profile')}>Profile</Button>
                 <Button className='bg-[#65A30D] cursor-pointer ' onClick={()=>setActiveTab('Password')}>Password</Button>
 
                 
-            </div>
+            </div> */}
             {activeTab === "Profile" && <Settings />}
             {activeTab === "Password" && <ChangePasswordContainer />}
      
