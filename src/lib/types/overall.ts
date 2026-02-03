@@ -2,8 +2,17 @@ export type MonthlyRevenue = {
   amount: number;
   currency: string;
   paymentCount: number;
-  month: string;
+  month: string | number;
 };
+
+export interface RevenueTrendDataPoint {
+  paymentCount: number;
+  year: number;
+  month: number;
+  totalRevenue: number;
+  averageAmount: number;
+  date: string;
+}
 
 export type DashboardData = {
   totalUsers: number;
