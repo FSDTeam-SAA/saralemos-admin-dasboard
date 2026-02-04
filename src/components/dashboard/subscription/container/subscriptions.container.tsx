@@ -38,6 +38,7 @@ export function SubscriptionsContainer() {
       billingCycle: data.duration,
       description: data.description,
       features: data.features,
+      allowedListings:data.allowedListings,
     });
   };
 

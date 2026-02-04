@@ -7,7 +7,7 @@ import { Pencil } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRef } from "react";
-import { toast } from "sonner";
+
 import { useQueryClient } from "@tanstack/react-query";
 
 const UserSidebar = () => {
@@ -21,6 +21,7 @@ const UserSidebar = () => {
     email: session?.user?.email || "",
     phone: "",
     location: "",
+    bio:"",
   };
 
   const { mutate: uploadAvatar, isPending: isUploading } = useUploadAvatar();
@@ -43,8 +44,8 @@ const UserSidebar = () => {
 
   if (isLoading) {
     return (
-      <aside className="w-full max-w-sm">
-        <div className="bg-white rounded-lg overflow-hidden border border-gray-200 animate-pulse">
+      <aside className="w-full max-w-sm min-h-full">
+        <div className="bg-white rounded-lg overflow-hidden border border-gray-200 animate-pulse min-h-full">
           <div className="h-24 bg-gray-200"></div>
           <div className="px-6 pb-6">
             <div className="flex justify-center -mt-16 mb-4">
@@ -64,8 +65,8 @@ const UserSidebar = () => {
   }
 
   return (
-    <aside className="w-full max-w-sm">
-      <div className="bg-white rounded-lg overflow-hidden border border-gray-200">
+    <aside className="w-full max-w-sm ">
+      <div className="bg-white rounded-lg overflow-hidden border border-gray-200 min-h-full">
         {/* Header Background */}
         <div
           className="h-24 opacity-80"
@@ -111,7 +112,7 @@ const UserSidebar = () => {
           <h2 className="text-center font-semibold text-gray-900 text-lg mb-1">
             {profileData.firstName} {profileData.lastName}
           </h2>
-          <p className="text-center text-gray-600 text-sm mb-6">ID: {id}</p>
+          {/* <p className="text-center text-gray-600 text-sm mb-6">ID: {id}</p> */}
 
           {/* Info Items */}
           <div className="space-y-4 border-t border-gray-200 pt-6">
@@ -122,6 +123,10 @@ const UserSidebar = () => {
                   [profileData.firstName, profileData.lastName]
                     .filter(Boolean)
                     .join(" ") || "N/A",
+              },
+                    {
+                label: "Bio:",
+                // value:profileData.bio || "N/A",
               },
               {
                 label: "Email:",

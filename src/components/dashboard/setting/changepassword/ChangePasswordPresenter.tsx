@@ -41,7 +41,7 @@ const ChangePasswordPresenter = ({ form, onSubmit, isLoading = false }: ChangePa
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-2xl">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 ">
           {/* Current Password */}
           <FormField
             control={form.control}

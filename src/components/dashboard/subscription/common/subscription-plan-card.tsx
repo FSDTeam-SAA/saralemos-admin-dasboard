@@ -196,6 +196,26 @@ export function SubscriptionPlanCard({
                 </p>
               </div>
             </div>
+            <div
+              className={`p-3 rounded-lg ${isHighlighted ? "bg-white/10" : "bg-gray-50 border border-gray-100"}`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                {/* <RefreshCw
+                  size={14}
+                  className={isHighlighted ? "text-green-50" : "text-[#65A30D]"}
+                /> */}
+                <span
+                  className={`text-[10px] font-bold uppercase tracking-tighter ${isHighlighted ? "text-green-50" : "text-muted-foreground"}`}
+                >
+                  AllowedListings
+                </span>
+              </div>
+              <p
+                className={`text-lg font-black ${isHighlighted ? "text-white" : "text-foreground"}`}
+              >
+                {plan.allowedListings}
+              </p>
+            </div>
 
             {/* All-time Stats */}
             <div
