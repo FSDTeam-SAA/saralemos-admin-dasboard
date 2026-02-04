@@ -29,67 +29,103 @@ export interface FacebookBusiness {
   name?: string;
   // Add other relevant fields as needed
 }
+export interface SubscriptionPlan {
+  _id: string;
+  name: string;
+  price: number;
+  billingCycle: "month" | "year";
+  allowedListings: number;
+  features: string[];
+}
+
 
 // Main user interface
 export interface User {
   _id: string;
+
   name: string;
   firstName: string;
   lastName: string;
   fullName: string;
+
   email: string;
   phoneNumber: string;
+
   dob: string | null;
-  gender: string;
+  gender: "male" | "female" | string;
+
+  allowedListings: number;
+  pagePictureUrl: string;
+
+  followersCount: number | null;
+  fanCount: number | null;
+  totalPosts: number | null;
+
   adAccountId: string | null;
   pageAccessToken: string | null;
   instagramAccountId: string | null;
   facebookConnectedAt: string | null;
+
   jobTitle: string;
   companyName: string;
   websiteUrl: string;
   industryExperience: string;
+
   languagesSpoken: string[];
+
   profileImage: string;
   multiProfileImage: string[];
   pdfFile: string;
   profilePhoto: string;
   companyLogo: string;
   bannerImage: string;
+
   socialLinks: SocialLinks;
+
   preferredToneOfVoice: string[];
   postingFrequency: string;
+
   yachtTypesHandled: string[];
   averagePriceRange: string | null;
   primaryRegionsServed: string[];
   listingPlatformsUsed: string[];
+
   customHeadline: string;
-  portfolioPageSlug: string;
+  portfolioPageSlug?: string;
   qrCodeUrl: string;
+
   role: "USER" | "ADMIN";
+
   isVerified: boolean;
   isActive: boolean;
+
   stripeAccountId: string | null;
+
   bio: string;
   address: UserAddress;
+
   otp: string | null;
   otpExpires: string | null;
   otpVerified: boolean;
   resetExpires: string | null;
+
   refreshToken: string;
+
   hasActiveSubscription: boolean;
   subscriptionExpireDate: string | null;
+
   blockedUsers: string[];
   language: string;
+
   facebookPages: FacebookPage[];
   facebookBusinesses: FacebookBusiness[];
-  plan?: string;
-  listings?: number;
-  lastActive?: string;
-  signupDate?: string;
+
+  subscriptionPlanId: SubscriptionPlan | null;
+
   createdAt: string;
   updatedAt: string;
 }
+
 
 // Pagination interface
 export interface PaginationInfo {

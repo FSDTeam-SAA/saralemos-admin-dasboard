@@ -6,6 +6,7 @@ export const createSubscriptionSchema = z.object({
   duration: z.enum(["month", "year"]),
   description: z.string().min(1, "Description is required"),
   features: z.array(z.string()).min(1, "At least one feature is required"),
+  allowedListings:z.number().min(0, "allowedListings must be 0 or greater"),
 })
 
 export type CreateSubscriptionValues = z.infer<typeof createSubscriptionSchema>
