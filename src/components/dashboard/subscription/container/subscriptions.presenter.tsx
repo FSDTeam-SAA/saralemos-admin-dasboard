@@ -25,6 +25,7 @@ interface SubscriptionsPresenterProps {
   currentPage: number;
   totalPages?: number;
   seeDetail:(id:string)=>void;
+  selectedId: string;
   singleplan:PlanAnalyticsData;
     revenuemetricsData:PaymentMetricsData;
 }
@@ -38,6 +39,7 @@ export function SubscriptionsPresenter({
   onCreatePlan,
   onDeletePlan,
   seeDetail,
+  selectedId,
 singleplan,
 revenuemetricsData,
   isCreatingPlan = false,
@@ -89,6 +91,7 @@ revenuemetricsData,
               onDelete={onDeletePlan}
               isHighlighted={index===1}
               seeDetail={seeDetail}
+              selectedId={selectedId}
               singleplan={singleplan}
             />
           ))}
