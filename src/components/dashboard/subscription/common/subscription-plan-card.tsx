@@ -19,6 +19,7 @@ interface SubscriptionPlanCardProps {
   onDelete: (id: string) => void;
   isHighlighted?: boolean;
   seeDetail: (id: string) => void;
+  selectedId: string;
   singleplan: PlanAnalyticsData;
 }
 
@@ -27,9 +28,10 @@ export function SubscriptionPlanCard({
   onDelete,
   isHighlighted = true,
   seeDetail,
+  selectedId,
   singleplan,
 }: SubscriptionPlanCardProps) {
-  const isSelected = singleplan?.planId === plan._id;
+  const isSelected = selectedId === plan._id;
 
   return (
     <motion.div
@@ -104,7 +106,7 @@ export function SubscriptionPlanCard({
           >
             {/* Analytics Grid */}
             <div className="grid grid-cols-2 gap-4">
-              <div
+              {singleplan.activeUsers && ( <div
                 className={`p-3 rounded-lg ${isHighlighted ? "bg-white/10" : "bg-gray-50 border border-gray-100"}`}
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -125,9 +127,11 @@ export function SubscriptionPlanCard({
                 >
                   {singleplan.activeUsers.toLocaleString()}
                 </p>
-              </div>
+              </div>)
 
-              <div
+              }
+             
+             {singleplan.monthlyRevenue &&( <div
                 className={`p-3 rounded-lg ${isHighlighted ? "bg-white/10" : "bg-gray-50 border border-gray-100"}`}
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -148,9 +152,11 @@ export function SubscriptionPlanCard({
                 >
                   ${singleplan.monthlyRevenue.amount.toLocaleString()}
                 </p>
-              </div>
+              </div>)
 
-              <div
+             }
+              
+              {singleplan.churnRate &&( <div
                 className={`p-3 rounded-lg ${isHighlighted ? "bg-white/10" : "bg-gray-50 border border-gray-100"}`}
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -171,9 +177,13 @@ export function SubscriptionPlanCard({
                 >
                   {singleplan.churnRate.percentage}%
                 </p>
-              </div>
+              </div>)
 
-              <div
+              }
+
+             
+            {singleplan.retentionRate &&(
+  <div
                 className={`p-3 rounded-lg ${isHighlighted ? "bg-white/10" : "bg-gray-50 border border-gray-100"}`}
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -195,6 +205,11 @@ export function SubscriptionPlanCard({
                   {singleplan.retentionRate.percentage}%
                 </p>
               </div>
+            )
+
+            }
+
+            
             </div>
             <div
               className={`p-3 rounded-lg ${isHighlighted ? "bg-white/10" : "bg-gray-50 border border-gray-100"}`}
@@ -218,7 +233,8 @@ export function SubscriptionPlanCard({
             </div>
 
             {/* All-time Stats */}
-            <div
+            {
+              singleplan.additionalMetrics && (     <div
               className={`p-4 rounded-lg flex items-center justify-between ${isHighlighted ? "bg-white/20" : "bg-[#65A30D]/5 border border-[#65A30D]/10"}`}
             >
               <div className="flex items-center gap-3">
@@ -256,7 +272,9 @@ export function SubscriptionPlanCard({
                   {singleplan.additionalMetrics.totalPayments}
                 </p>
               </div>
-            </div>
+            </div>)
+            }
+       
 
             {/* Features Section */}
             <div className="space-y-3">

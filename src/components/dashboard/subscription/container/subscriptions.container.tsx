@@ -57,7 +57,8 @@ export function SubscriptionsContainer() {
       isCreatingPlan={createPlanMutation.isPending}
       onPageChange={setCurrentPage}
       currentPage={currentPage}
-      seeDetail={setId}
+      seeDetail={(newId) => setId((prev) => (prev === newId ? "" : newId))}
+      selectedId={id}
       singleplan={singleplan}
       revenuemetricsData={revenuemetricsData?.data}
       // totalPages={totalPages}
