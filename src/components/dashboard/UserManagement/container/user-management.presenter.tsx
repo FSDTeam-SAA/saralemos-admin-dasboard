@@ -27,6 +27,7 @@ export function UserManagementPresenter({
   totalPages,
 }: UserManagementPresenterProps) {
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  
 
   if (isLoading) {
     return (
@@ -107,13 +108,13 @@ export function UserManagementPresenter({
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Plan</label>
-                  <p className="text-foreground font-medium capitalize">{selectedUser.plan || "Free"}</p>
+                  <p className="text-foreground font-medium capitalize">{selectedUser.subscriptionPlanId?.name || "Free"}</p>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Listings</label>
-                  <p className="text-foreground font-medium">{selectedUser.listings || 0}</p>
+                  <p className="text-foreground font-medium">{selectedUser.allowedListings || 0}</p>
                 </div>
                 <div>
                     <label className="text-sm font-medium text-muted-foreground">Role</label>
@@ -124,15 +125,10 @@ export function UserManagementPresenter({
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Signup Date</label>
                   <p className="text-foreground font-medium">
-                    {selectedUser.signupDate ? new Date(selectedUser.signupDate).toLocaleDateString() : (selectedUser.createdAt ? new Date(selectedUser.createdAt).toLocaleDateString() : "N/A")}
+                    {selectedUser.updatedAt ? new Date(selectedUser.updatedAt).toLocaleDateString() : (selectedUser.createdAt ? new Date(selectedUser.createdAt).toLocaleDateString() : "N/A")}
                   </p>
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Last Active</label>
-                  <p className="text-foreground font-medium">
-                    {selectedUser.lastActive ? new Date(selectedUser.lastActive).toLocaleDateString() : "N/A"}
-                  </p>
-                </div>
+           
               </div>
               {selectedUser.phoneNumber && (
                 <div>
