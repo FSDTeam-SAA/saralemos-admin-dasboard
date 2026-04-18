@@ -1,3 +1,10 @@
+import type {
+  AdditionalMetrics,
+  ChurnRate,
+  MonthlyRevenue,
+  RetentionRate,
+} from "@/lib/types/subscription";
+
 export type SubscriptionTier =
   | "Free"
   | "Starter"
@@ -22,6 +29,11 @@ export interface SubscriptionPlan {
   cta?: string;
   period?: string;
   allowedListings?: number;
+  activeUsers?: number;
+  monthlyRevenue?: MonthlyRevenue;
+  churnRate?: ChurnRate;
+  retentionRate?: RetentionRate;
+  additionalMetrics?: AdditionalMetrics;
 }
 
 export interface ApiResponse {

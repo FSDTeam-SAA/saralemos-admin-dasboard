@@ -8,6 +8,7 @@ import {
 
   PencilIcon,
   Eye,
+  Pencil,
 } from "lucide-react";
 import { Asset } from "@/lib/types/hero";
 // import { Button } from "@/components/ui/button";
@@ -90,7 +91,7 @@ export function HeroTable({ data, onView, onEdit, onDelete }: HeroTableProps) {
                     onClick={() => onEdit(asset)}
                     className="p-1 hover:bg-muted rounded cursor-pointer transition-colors hover:text-[#16A34A]"
                   >
-                    <PencilIcon className="w-4 h-4" />
+                    <Pencil className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => onDelete(asset._id)}

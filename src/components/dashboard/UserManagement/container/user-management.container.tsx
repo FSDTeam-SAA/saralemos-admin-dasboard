@@ -11,9 +11,9 @@ export function UserManagementContainer() {
   const { data, isLoading, error } = useUsers()
   const deleteUserMutation = useDeleteUser()
   const handleDeleteUser = (id: string) => {
-    if (confirm("Are you sure you want to delete this user?")) {
+  
       deleteUserMutation.mutate(id)
-    }
+ 
   }
 
   const users = data?.data?.data?.users || []
