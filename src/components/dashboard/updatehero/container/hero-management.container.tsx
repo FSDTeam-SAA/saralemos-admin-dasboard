@@ -5,6 +5,8 @@ import { useState } from "react"
 import type { HeroFormValues } from "./hero-management.schema"
 import { HeroManagementPresenter } from "./hero-management.presenter"
 import { useGetAllHero, useUpdateHero, useDeleteHero } from "@/lib/hooks/useUpdateHero"
+import { success } from "zod"
+import { toast } from "sonner"
 
 export function HeroManagementContainer() {
   const [isLoading, setIsLoading] = useState(false)
@@ -40,12 +42,16 @@ export function HeroManagementContainer() {
     }
   }
 
-  const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this asset?")) {
-      deleteHero(id)
-    }
-  }
-
+const handleDelete = (id: string) => {
+  deleteHero(id, {
+    onSuccess: () => {
+      toast.success("Hero section deleted successfully");
+    },
+    onError: () => {
+      toast.error("Failed to delete hero section");
+    },
+  });
+};
   return (
     <HeroManagementPresenter
       onSubmit={handleSubmit}

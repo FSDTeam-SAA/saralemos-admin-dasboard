@@ -11,7 +11,6 @@ import {
   ChevronUp,
 } from "lucide-react";
 import type { SubscriptionPlan } from "./subscriptions.types";
-import { PlanAnalyticsData } from "@/lib/types/subscription";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface SubscriptionPlanCardProps {
@@ -20,7 +19,6 @@ interface SubscriptionPlanCardProps {
   isHighlighted?: boolean;
   seeDetail: (id: string) => void;
   selectedId: string;
-  singleplan: PlanAnalyticsData;
 }
 
 export function SubscriptionPlanCard({
@@ -29,7 +27,6 @@ export function SubscriptionPlanCard({
   isHighlighted = true,
   seeDetail,
   selectedId,
-  singleplan,
 }: SubscriptionPlanCardProps) {
   const isSelected = selectedId === plan._id;
 
@@ -106,7 +103,7 @@ export function SubscriptionPlanCard({
           >
             {/* Analytics Grid */}
             <div className="grid grid-cols-2 gap-4">
-              {singleplan.activeUsers && ( <div
+              {plan.activeUsers && ( <div
                 className={`p-3 rounded-lg ${isHighlighted ? "bg-white/10" : "bg-gray-50 border border-gray-100"}`}
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -125,13 +122,13 @@ export function SubscriptionPlanCard({
                 <p
                   className={`text-lg font-black ${isHighlighted ? "text-white" : "text-foreground"}`}
                 >
-                  {singleplan.activeUsers.toLocaleString()}
+                  {plan.activeUsers.toLocaleString()}
                 </p>
               </div>)
 
               }
              
-             {singleplan.monthlyRevenue &&( <div
+             {plan.monthlyRevenue &&( <div
                 className={`p-3 rounded-lg ${isHighlighted ? "bg-white/10" : "bg-gray-50 border border-gray-100"}`}
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -150,13 +147,13 @@ export function SubscriptionPlanCard({
                 <p
                   className={`text-lg font-black ${isHighlighted ? "text-white" : "text-foreground"}`}
                 >
-                  ${singleplan.monthlyRevenue.amount.toLocaleString()}
+                  ${plan.monthlyRevenue.amount.toLocaleString()}
                 </p>
               </div>)
 
              }
               
-              {singleplan.churnRate &&( <div
+              {plan.churnRate &&( <div
                 className={`p-3 rounded-lg ${isHighlighted ? "bg-white/10" : "bg-gray-50 border border-gray-100"}`}
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -175,14 +172,14 @@ export function SubscriptionPlanCard({
                 <p
                   className={`text-lg font-black ${isHighlighted ? "text-white" : "text-foreground"}`}
                 >
-                  {singleplan.churnRate.percentage}%
+                  {plan.churnRate.percentage}%
                 </p>
               </div>)
 
               }
 
              
-            {singleplan.retentionRate &&(
+            {plan.retentionRate &&(
   <div
                 className={`p-3 rounded-lg ${isHighlighted ? "bg-white/10" : "bg-gray-50 border border-gray-100"}`}
               >
@@ -202,7 +199,7 @@ export function SubscriptionPlanCard({
                 <p
                   className={`text-lg font-black ${isHighlighted ? "text-white" : "text-foreground"}`}
                 >
-                  {singleplan.retentionRate.percentage}%
+                  {plan.retentionRate.percentage}%
                 </p>
               </div>
             )
@@ -234,7 +231,7 @@ export function SubscriptionPlanCard({
 
             {/* All-time Stats */}
             {
-              singleplan.additionalMetrics && (     <div
+              plan.additionalMetrics && (     <div
               className={`p-4 rounded-lg flex items-center justify-between ${isHighlighted ? "bg-white/20" : "bg-[#65A30D]/5 border border-[#65A30D]/10"}`}
             >
               <div className="flex items-center gap-3">
@@ -256,7 +253,7 @@ export function SubscriptionPlanCard({
                     className={`text-xl font-black ${isHighlighted ? "text-white" : "text-foreground"}`}
                   >
                     $
-                    {singleplan.additionalMetrics.allTimeRevenue.toLocaleString()}
+                    {plan.additionalMetrics.allTimeRevenue.toLocaleString()}
                   </p>
                 </div>
               </div>
@@ -269,7 +266,7 @@ export function SubscriptionPlanCard({
                 <p
                   className={`text-lg font-bold ${isHighlighted ? "text-white" : "text-foreground"}`}
                 >
-                  {singleplan.additionalMetrics.totalPayments}
+                  {plan.additionalMetrics.totalPayments}
                 </p>
               </div>
             </div>)

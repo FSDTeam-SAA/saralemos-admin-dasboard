@@ -8,22 +8,17 @@ import {
 } from "../common/subscriptions.hooks";
 import { SubscriptionsPresenter } from "./subscriptions.presenter";
 import type { CreateSubscriptionValues } from "../common/subscriptions.schema";
-import {
-  useSingleSubscription,
-  useSubscriptionRevenue,
-} from "@/lib/hooks/useSubscription";
+import { useSubscriptionRevenue } from "@/lib/hooks/useSubscription";
 
 export function SubscriptionsContainer() {
   const [currentPage, setCurrentPage] = useState(1);
   const [id, setId] = useState("");
-  const pageSize = 10;
 
   const {
     data,
     isLoading: isLoadingPlans,
     error: errorPlans,
   } = useSubscriptionPlans();
-  const { data: singleData } = useSingleSubscription(id);
 
   const { data: revenuemetricsData } = useSubscriptionRevenue();
 
@@ -43,9 +38,6 @@ export function SubscriptionsContainer() {
   };
 
   const plans = data?.data || [];
-  const singleplan = singleData?.data || {};
-
-  // const totalPages = plansResponse?.data?.total ? Math.ceil(plansResponse.data.total / pageSize) : 1
 
   return (
     <SubscriptionsPresenter
@@ -59,9 +51,7 @@ export function SubscriptionsContainer() {
       currentPage={currentPage}
       seeDetail={(newId) => setId((prev) => (prev === newId ? "" : newId))}
       selectedId={id}
-      singleplan={singleplan}
       revenuemetricsData={revenuemetricsData?.data}
-      // totalPages={totalPages}
     />
   );
 }

@@ -38,19 +38,6 @@ export async function SubscriptionDelete(id: string) {
   }
 }
 
-export async function singleSubscription(id: string) {
-  try {
-    const res = await api.get(`/subscription/plan/${id}`);
-    return res.data;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(
-        error.message || "Fail to Fetch Your Profile please check everyting",
-      );
-    }
-  }
-}
-
 export async function subscriptionRevenue() {
   try {
     const res = await api.get(`/subscription/metrics`);

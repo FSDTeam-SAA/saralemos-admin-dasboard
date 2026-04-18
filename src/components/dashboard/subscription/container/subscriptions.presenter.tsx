@@ -9,7 +9,7 @@ import { CreateSubscriptionValues } from "../common/subscriptions.schema";
 import { SubscriptionPlanCard } from "../common/subscription-plan-card";
 import { CreateSubscriptionModal } from "../common/create-subscription-modal";
 import { RevenueMetricsComponent } from "../common/revenue-metrics";
-import { PaymentMetricsData, PlanAnalyticsData } from "@/lib/types/subscription";
+import { PaymentMetricsData } from "@/lib/types/subscription";
 
 interface SubscriptionsPresenterProps {
   plans: SubscriptionPlan[];
@@ -26,7 +26,6 @@ interface SubscriptionsPresenterProps {
   totalPages?: number;
   seeDetail:(id:string)=>void;
   selectedId: string;
-  singleplan:PlanAnalyticsData;
     revenuemetricsData:PaymentMetricsData;
 }
 
@@ -40,7 +39,6 @@ export function SubscriptionsPresenter({
   onDeletePlan,
   seeDetail,
   selectedId,
-singleplan,
 revenuemetricsData,
   isCreatingPlan = false,
 }: SubscriptionsPresenterProps) {
@@ -92,7 +90,6 @@ revenuemetricsData,
               isHighlighted={index===1}
               seeDetail={seeDetail}
               selectedId={selectedId}
-              singleplan={singleplan}
             />
           ))}
         </div>
