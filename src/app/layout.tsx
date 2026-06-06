@@ -11,7 +11,7 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Lime Pitch Admin Dashboard",
+  title: "Lime Pitch ",
   description: "Professional admin dashboard for managing users and content",
   generator: "v0.app",
   icons: {
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
       {
         url: "/icon.svg",
         type: "image/svg+xml",
-      },
+      },  
     ],
     apple: "/apple-icon.png",
   },
